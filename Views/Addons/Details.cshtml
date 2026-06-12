@@ -1,0 +1,82 @@
+@model DBDHub.Models.Addon
+@{
+    ViewData["Title"] = "Detalle del Addon";
+}
+
+@functions {
+    // Devuelve la clase CSS para el fondo del icono según rareza
+    string GetRarityClass(string? rarity)
+    {
+        return rarity?.ToLower() switch
+        {
+            "común" or "common" => "common",
+            "poco común" or "uncommon" => "uncommon",
+            "raro" or "rare" => "rare",           // verde clásico
+            // Si prefieres el azul moderno, cambia "rare" por "rare-new"
+            "muy raro" or "very rare" => "very-rare",
+            "ultra raro" or "ultra rare" => "ultra-rare",
+            "evento" or "event" => "event",
+            _ => ""  // sin rareza → sin clase
+        };
+    }
+
+    // Devuelve la clase CSS para el color del texto según rareza
+    string GetRarityTextClass(string? rarity)
+    {
+        return rarity?.ToLower() switch
+        {
+            "común" or "common" => "common-text",
+            "poco común" or "uncommon" => "uncommon-text",
+            "raro" or "rare" => "rare-text",
+            "muy raro" or "very rare" => "very-rare-text",
+            "ultra raro" or "ultra rare" => "ultra-rare-text",
+            "evento" or "event" => "event-text",
+            _ => ""
+        };
+    }
+}
+
+<div class="container mt-4">
+    <div class="text-center mb-4">
+        <!-- Caja cuadrada del addon con el gradiente de rareza -->
+        <div class="dbd-addon @GetRarityClass(Model.Rareza)" style="width:120px; height:120px; margin:0 auto;">
+            @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+            {
+                <img src="@Model.ImagenUrl" alt="@Model.Nombre" />
+            }
+            else
+            {
+                <i class="fas fa-puzzle-piece text-white fs-1"></i>
+            }
+        </div>
+    </div>
+
+    <h1 class="@GetRarityTextClass(Model.Rareza) mb-3">
+        <i class="fas fa-puzzle-piece me-2"></i>@Model.Nombre
+    </h1>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-3">Rareza</dt>
+        <dd class="col-sm-9 @GetRarityTextClass(Model.Rareza)">@(Model.Rareza ?? "-")</dd>
+
+        <dt class="col-sm-3">Descripción</dt>
+        <dd class="col-sm-9">@(Model.Descripcion ?? "Sin descripción")</dd>
+
+        <dt class="col-sm-3">Killer</dt>
+        <dd class="col-sm-9">
+            @if (Model.Killer != null)
+            {
+                <span>@Model.Killer.Nombre</span>
+            }
+            else
+            {
+                <span class="text-muted">No asignado</span>
+            }
+        </dd>
+    </dl>
+
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning"><i class="fas fa-edit"></i> Editar</a>
+    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Eliminar</a>
+    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+</div>

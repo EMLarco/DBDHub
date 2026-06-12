@@ -12,14 +12,13 @@ namespace DBDHub.Models
 
         public string? Descripcion { get; set; }
 
-        [Range(1, 3, ErrorMessage = "El nivel debe ser 1, 2 o 3")]
+        [Range(1, 3)]
         public int Nivel { get; set; }
 
         [Required(ErrorMessage = "El tipo de personaje es obligatorio")]
         [StringLength(20)]
         public string TipoPersonaje { get; set; } = string.Empty; // "Killer" o "Survivor"
 
-        // Claves foráneas (pueden ser nulas)
         public int? KillerId { get; set; }
         public Killer? Killer { get; set; }
 
@@ -28,5 +27,8 @@ namespace DBDHub.Models
 
         public bool Activo { get; set; } = true;
         public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
+
+        [StringLength(500)]
+        public string? ImagenUrl { get; set; }
     }
 }

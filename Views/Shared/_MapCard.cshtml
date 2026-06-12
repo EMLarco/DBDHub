@@ -1,0 +1,15 @@
+@model DBDHub.Models.Map
+
+<a asp-action="Details" asp-route-id="@Model.Id" class="text-decoration-none">
+    <div class="map-card">
+        <div class="map-img-container">
+            <img src="@(Model.ImagenUrl ?? "/images/placeholder-map.png")" 
+                 alt="@Model.Nombre" 
+                 class="map-img" />
+        </div>
+        <div class="map-info">
+            <h6 class="map-name">@Model.Nombre</h6>
+            <span class="badge bg-secondary">@Model.Tipo</span>
+        </div>
+    </div>
+</a>

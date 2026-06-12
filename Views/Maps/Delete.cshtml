@@ -1,0 +1,22 @@
+@model DBDHub.Models.Map
+@{
+    ViewData["Title"] = "Eliminar Mapa";
+}
+
+<div class="container mt-4">
+    <h1><i class="fas fa-trash-alt me-2"></i>¿Desactivar mapa?</h1>
+    <div class="alert alert-warning">Se aplicará eliminación lógica. No se borrará físicamente.</div>
+
+    <dl class="row">
+        <dt class="col-sm-3">Nombre</dt>
+        <dd class="col-sm-9">@Model.Nombre</dd>
+        <dt class="col-sm-3">Tipo</dt>
+        <dd class="col-sm-9">@Model.Tipo</dd>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger"><i class="fas fa-check"></i> Confirmar eliminación lógica</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

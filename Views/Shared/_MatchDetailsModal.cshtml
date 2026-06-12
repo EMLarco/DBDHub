@@ -1,0 +1,96 @@
+@model DBDHub.Models.Match
+
+<div class="modal-body text-light">
+    <div class="row">
+        <!-- Killer -->
+        <div class="col-md-5 mb-3">
+            @if (Model.Killer != null)
+            {
+                <div class="text-center">
+                    <img src="@(Model.Killer.ImagenUrl ?? "/images/placeholder-killer.png")" 
+                         alt="@Model.Killer.Nombre" style="max-height:120px;" class="img-fluid rounded" />
+                    <h5 class="mt-2">@Model.Killer.Nombre</h5>
+                    <p class="small text-muted">@Model.Killer.Poder</p>
+                </div>
+                <div class="d-flex flex-wrap justify-content-center gap-2 mb-2">
+                    @foreach (var perk in Model.Killer.Perks!)
+                    {
+                        <div class="text-center">
+                            <img src="@perk.ImagenUrl" alt="@perk.Nombre" class="perk-detail-img-small" title="@perk.Nombre" />
+                        </div>
+                    }
+                </div>
+                <div class="text-center">
+                    @foreach (var addon in Model.Killer.Addons!)
+                    {
+                        <span class="badge bg-secondary me-1">@addon.Nombre</span>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">Sin killer</p>
+            }
+        </div>
+
+        <!-- Survivors -->
+        <div class="col-md-4 mb-3">
+            <div class="row">
+                @foreach (var surv in new[] { Model.Survivor1, Model.Survivor2, Model.Survivor3, Model.Survivor4 })
+                {
+                    <div class="col-6 text-center mb-2">
+                        @if (surv != null)
+                        {
+                            <img src="@(surv.ImagenUrl ?? "/images/placeholder-survivor.png")" 
+                                 alt="@surv.Nombre" style="max-height:70px;" class="img-fluid rounded" />
+                            <p class="small fw-bold mt-1">@surv.Nombre</p>
+                            <div class="d-flex flex-wrap justify-content-center gap-1">
+                                @foreach (var perk in surv.Perks!)
+                                {
+                                    <img src="@perk.ImagenUrl" alt="@perk.Nombre" class="perk-detail-img-small" title="@perk.Nombre" />
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="text-muted">-</span>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="col-md-3">
+            <div class="text-center">
+                <span class="display-4 text-warning">@Model.TotalScore.ToString("N0")</span>
+                <p class="text-muted">Puntuación</p>
+            </div>
+            <p><i class="fas fa-map me-1"></i> @Model.MapName</p>
+            @if (Model.Map != null)
+            {
+                <img src="@Model.Map.ImagenUrl" alt="@Model.Map.Nombre" class="img-fluid rounded mb-2" style="max-height:80px;" />
+            }
+            <p><i class="fas fa-clock me-1"></i> @TimeSpan.FromSeconds(Model.DuracionSegundos).ToString(@"mm\:ss")</p>
+            <p>
+                <span class="badge @GetResultClass(Model.Result)">@Model.Result</span>
+            </p>
+            <div class="d-flex flex-wrap gap-1">
+                <span class="badge bg-secondary">@Model.Detail1.ToString("N0")</span>
+                <span class="badge bg-secondary">@Model.Detail2.ToString("N0")</span>
+                <span class="badge bg-secondary">@Model.Detail3.ToString("N0")</span>
+                <span class="badge bg-secondary">@Model.Detail4.ToString("N0")</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetResultClass(string result) => result switch
+    {
+        "Merciless Killer" => "bg-warning text-dark",
+        "Ruthless Killer" => "bg-secondary text-dark",
+        "Dead" => "bg-danger text-white",
+        _ => "bg-dark"
+    };
+}

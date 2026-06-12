@@ -1,0 +1,65 @@
+@model IEnumerable<DBDHub.Models.Map>
+@{
+    ViewData["Title"] = "Mapas";
+    int pagina = (int)ViewData["pagina"];
+    int tamano = (int)ViewData["tamano"];
+    int total = (int)ViewData["total"];
+    string buscar = ViewData["buscar"]?.ToString() ?? "";
+    string tipo = ViewData["tipo"]?.ToString() ?? "";
+    int totalPaginas = (int)Math.Ceiling((double)total / tamano);
+}
+
+<div class="container-fluid mt-4 px-3">
+    <h1 class="mb-4" style="color:#e8c252"><i class="fas fa-map me-2"></i>@ViewData["Title"]</h1>
+
+    <div class="d-flex justify-content-between mb-3">
+        <a asp-action="Create" class="btn btn-success"><i class="fas fa-plus"></i> Nuevo Mapa</a>
+        <form asp-action="Index" method="get" class="d-flex">
+            <input name="buscar" class="form-control me-2" placeholder="Buscar..." value="@buscar" />
+            <select name="tipo" class="form-control me-2" style="width:auto">
+                <option value="">Todos</option>
+                <option value="Original" selected="@(tipo=="Original")">Original</option>
+                <option value="Variante" selected="@(tipo=="Variante")">Variante</option>
+            </select>
+            <button class="btn btn-primary me-1"><i class="fas fa-search"></i></button>
+            <a asp-action="Index" class="btn btn-secondary"><i class="fas fa-times"></i></a>
+        </form>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning">No se encontraron mapas.</div>
+    }
+    else
+    {
+        <div class="row g-3">
+            @foreach (var map in Model)
+            {
+                <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                    @await Html.PartialAsync("_MapCard", map)
+                </div>
+            }
+        </div>
+    }
+
+    @if (totalPaginas > 1)
+    {
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(pagina==1?"disabled":"")">
+                    <a class="page-link" asp-route-pagina="@(pagina-1)" asp-route-buscar="@buscar" asp-route-tipo="@tipo"><i class="fas fa-chevron-left"></i></a>
+                </li>
+                @for (int i=1; i<=totalPaginas; i++)
+                {
+                    <li class="page-item @(i==pagina?"active":"")">
+                        <a class="page-link" asp-route-pagina="@i" asp-route-buscar="@buscar" asp-route-tipo="@tipo">@i</a>
+                    </li>
+                }
+                <li class="page-item @(pagina==totalPaginas?"disabled":"")">
+                    <a class="page-link" asp-route-pagina="@(pagina+1)" asp-route-buscar="@buscar" asp-route-tipo="@tipo"><i class="fas fa-chevron-right"></i></a>
+                </li>
+            </ul>
+        </nav>
+    }
+    <p class="text-muted text-center">Página @pagina de @totalPaginas — Total: @total mapas</p>
+</div>

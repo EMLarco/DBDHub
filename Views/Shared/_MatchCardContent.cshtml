@@ -1,0 +1,41 @@
+@model DBDHub.Models.Match
+
+<div class="match-header">
+    @if (Model.Killer != null)
+    {
+        <div class="character-info">
+            <img src="@(Model.Killer.ImagenUrl ?? "/images/placeholder-killer.png")" alt="@Model.Killer.Nombre" class="char-img" />
+            <span class="char-name">@Model.Killer.Nombre</span>
+            <i class="fas fa-skull role-icon killer-icon"></i>
+        </div>
+    }
+    else if (Model.Survivor1 != null)
+    {
+        <div class="character-info">
+            <img src="@(Model.Survivor1.ImagenUrl ?? "/images/placeholder-survivor.png")" alt="@Model.Survivor1.Nombre" class="char-img" />
+            <span class="char-name">@Model.Survivor1.Nombre</span>
+            <i class="fas fa-user role-icon survivor-icon"></i>
+        </div>
+    }
+    <span class="match-date">@Model.FechaPartida.ToString("MMM dd, h:mm tt")</span>
+</div>
+<div class="match-score">@Model.TotalScore.ToString("N0")</div>
+<div class="match-map"><i class="fas fa-map me-1"></i>@Model.MapName — <span class="location">@Model.Location</span></div>
+<div class="match-details">
+    <span>@Model.Detail1.ToString("N0")</span>
+    <span>@Model.Detail2.ToString("N0")</span>
+    <span>@Model.Detail3.ToString("N0")</span>
+    <span>@Model.Detail4.ToString("N0")</span>
+</div>
+<div class="match-result @GetResultClass(Model.Result)">@Model.Result</div>
+<div class="match-duration"><i class="fas fa-clock"></i> @TimeSpan.FromSeconds(Model.DuracionSegundos).ToString(@"mm\:ss")</div>
+
+@functions {
+    string GetResultClass(string result) => result switch
+    {
+        "Merciless Killer" => "badge-gold",
+        "Ruthless Killer" => "badge-silver",
+        "Dead" => "badge-red",
+        _ => ""
+    };
+}

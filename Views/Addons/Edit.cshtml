@@ -1,0 +1,48 @@
+@model DBDHub.Models.Addon
+@{
+    ViewData["Title"] = "Editar Addon";
+}
+
+<div class="container mt-4">
+    <h1><i class="fas fa-edit me-2"></i>Editar - @Model.Nombre</h1>
+    <hr />
+    <form asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label asp-for="Nombre" class="form-label"></label>
+            <input asp-for="Nombre" class="form-control" />
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Rareza" class="form-label"></label>
+            <select asp-for="Rareza" class="form-control">
+                <option value="Común">Común</option>
+                <option value="Poco común">Poco común</option>
+                <option value="Raro">Raro</option>
+                <option value="Muy raro">Muy raro</option>
+                <option value="Ultra raro">Ultra raro</option>
+            </select>
+            <span asp-validation-for="Rareza" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Descripcion" class="form-label"></label>
+            <textarea asp-for="Descripcion" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Descripcion" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="KillerId" class="form-label">Killer</label>
+            <select asp-for="KillerId" class="form-control" asp-items="ViewBag.KillerId"></select>
+            <span asp-validation-for="KillerId" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ImagenUrl" class="form-label">URL de la imagen</label>
+            <input asp-for="ImagenUrl" class="form-control" placeholder="https://..." />
+            <span asp-validation-for="ImagenUrl" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

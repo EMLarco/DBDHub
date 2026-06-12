@@ -3,70 +3,168 @@
     ViewData["Title"] = "Detalle del Asesino";
 }
 
-<h1>@Model.Nombre</h1>
-<hr />
+<div class="container-fluid mt-4 px-3">
+    <!-- Cabecera con nombre y botones -->
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <h1 class="mb-0" style="color: #ff3e3e; text-transform: uppercase; letter-spacing: 2px; text-shadow: 2px 2px 4px #000;">
+            <i class="fas fa-skull me-2"></i>@Model.Nombre
+        </h1>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning btn-sm me-1">
+                <i class="fas fa-edit"></i> Editar
+            </a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm me-1">
+                <i class="fas fa-trash-alt"></i> Eliminar
+            </a>
+            <a asp-action="Index" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
 
-<div class="row">
-    <div class="col-md-6">
-        <dl class="row">
-            <dt class="col-sm-4">Poder</dt>
-            <dd class="col-sm-8">@(Model.Poder ?? "-")</dd>
-            <dt class="col-sm-4">Velocidad</dt>
-            <dd class="col-sm-8">@Model.Velocidad</dd>
-            <dt class="col-sm-4">Dificultad</dt>
-            <dd class="col-sm-8">@(Model.Dificultad ?? "-")</dd>
-            <dt class="col-sm-4">Historia</dt>
-            <dd class="col-sm-8">@(Model.Historia ?? "-")</dd>
-        </dl>
+    <div class="row">
+        <!-- Columna izquierda: información textual -->
+        <div class="col-md-7 col-lg-8">
+            <!-- Datos básicos sin bordes -->
+            <div class="mb-4">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p class="mb-1"><strong style="color: #e8c252;">Poder:</strong></p>
+                        <p class="text-light">@(Model.Poder ?? "Desconocido")</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <p class="mb-1"><strong style="color: #e8c252;">Velocidad:</strong></p>
+                        <p class="text-light">@Model.Velocidad</p>
+                    </div>
+                    <div class="col-sm-3">
+                        <p class="mb-1"><strong style="color: #e8c252;">Dificultad:</strong></p>
+                        <p class="text-light">@(Model.Dificultad ?? "Normal")</p>
+                    </div>
+                </div>
+                <p class="mb-1"><strong style="color: #e8c252;">Historia:</strong></p>
+                <p class="text-light" style="line-height: 1.6;">@(Model.Historia ?? "Sin historia registrada.")</p>
+            </div>
+
+            <!-- Perks (tabla) -->
+            @if (Model.Perks?.Any() == true)
+            {
+                <h3 class="mt-4 mb-3" style="color: #e8c252; border-bottom: 2px dashed #8b0000; padding-bottom: 5px;">
+                    <i class="fas fa-star me-2"></i>Perks
+                </h3>
+                <div class="table-responsive">
+                    <table class="table table-dark table-striped table-hover align-middle">
+                        <thead class="table-danger">
+                            <tr>
+                                <th style="width: 70px;">Imagen</th>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var perk in Model.Perks)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        @if (!string.IsNullOrEmpty(perk.ImagenUrl))
+                                        {
+                                            <img src="@perk.ImagenUrl" alt="@perk.Nombre" class="perk-detail-img" />
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-star text-warning fs-4"></i>
+                                        }
+                                    </td>
+                                    <td class="fw-bold">@perk.Nombre</td>
+                                    <td>@(perk.Descripcion ?? "-")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-secondary mt-3">
+                    <i class="fas fa-info-circle me-2"></i> Este asesino no tiene perks registradas.
+                </div>
+            }
+
+            <!-- Addons (tabla) -->
+            @if (Model.Addons?.Any() == true)
+            {
+                <h3 class="mt-4 mb-3" style="color: #e8c252; border-bottom: 2px dashed #8b0000; padding-bottom: 5px;">
+                    <i class="fas fa-puzzle-piece me-2"></i>Addons
+                </h3>
+                <div class="table-responsive">
+                    <table class="table table-dark table-striped table-hover align-middle">
+                        <thead class="table-danger">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Rareza</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var addon in Model.Addons)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@addon.Nombre</td>
+                                    <td>@(addon.Rareza ?? "-")</td>
+                                    <td>@(addon.Descripcion ?? "-")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+            <!-- Mapas asociados -->
+            @if (Model.MapKillers?.Any() == true)
+            {
+                <h3 class="mt-4 mb-3" style="color: #e8c252; border-bottom: 2px dashed #8b0000; padding-bottom: 5px;">
+                    <i class="fas fa-map me-2"></i>Mapas asociados
+                </h3>
+                <ul class="list-unstyled">
+                    @foreach (var mk in Model.MapKillers)
+                    {
+                        <li class="mb-1 text-light">
+                            <i class="fas fa-map-pin me-2" style="color: #8b0000;"></i>@mk.Map?.Nombre (@mk.Map?.Tipo)
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+
+        <!-- Columna derecha: imagen del killer (estilo carta) -->
+        <div class="col-md-5 col-lg-4 d-flex justify-content-center">
+            <div class="killer-card" style="width: 280px; height: 440px; cursor: default; transform: none;">
+                <div class="portrait-wrapper" style="height: 380px;">
+                    <img src="@(Model.ImagenUrl ?? "/images/placeholder-killer.png")"
+                         alt="@Model.Nombre"
+                         class="killer-img"
+                         onerror="this.onerror=null;this.src='/images/placeholder-killer.png';" />
+                    <div class="overlay-glow"></div>
+                </div>
+                <div class="killer-info">
+                    <span class="killer-title">@Model.Nombre</span>
+                    <span class="killer-difficulty @GetDifficultyClass(Model.Dificultad)">
+                        @(Model.Dificultad ?? "Unknown")
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-@if (Model.Perks?.Any() == true)
-{
-    <h3>Perks</h3>
-    <table class="table table-sm">
-        <thead><tr><th>Nombre</th><th>Descripción</th><th>Nivel</th></tr></thead>
-        <tbody>
-        @foreach (var perk in Model.Perks)
-        {
-            <tr>
-                <td>@perk.Nombre</td>
-                <td>@(perk.Descripcion ?? "-")</td>
-                <td>@perk.Nivel</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
-
-@if (Model.Addons?.Any() == true)
-{
-    <h3>Addons</h3>
-    <table class="table table-sm">
-        <thead><tr><th>Nombre</th><th>Rareza</th><th>Descripción</th></tr></thead>
-        <tbody>
-        @foreach (var addon in Model.Addons)
-        {
-            <tr>
-                <td>@addon.Nombre</td>
-                <td>@(addon.Rareza ?? "-")</td>
-                <td>@(addon.Descripcion ?? "-")</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
-
-@if (Model.MapKillers?.Any() == true)
-{
-    <h3>Mapas asociados</h3>
-    <ul>
-    @foreach (var mk in Model.MapKillers)
+@functions {
+    string GetDifficultyClass(string? difficulty)
     {
-        <li>@mk.Map?.Nombre (@mk.Map?.Tipo)</li>
+        return difficulty?.ToLower() switch
+        {
+            "fácil" or "easy" => "easy",
+            "moderado" or "moderate" => "intermediate",
+            "difícil" or "hard" or "muy difícil" or "very hard" => "hard",
+            _ => ""
+        };
     }
-    </ul>
 }
-
-<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
-<a asp-action="Index" class="btn btn-secondary">Volver</a>

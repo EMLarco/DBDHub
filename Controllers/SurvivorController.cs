@@ -14,31 +14,31 @@ namespace DBDHub.Controllers
             _context = context;
         }
 
- // GET: Survivors
-public async Task<IActionResult> Index(string buscar, int pagina = 1, int tamano = 10)
-{
-    var query = _context.Survivors.Where(s => s.Activo == true);
+        // GET: Survivors (con paginación, búsqueda y carga de Perks)
+        public async Task<IActionResult> Index(string buscar, int pagina = 1, int tamano = 18)
+        {
+            var query = _context.Survivors
+                .Include(s => s.Perks!.Where(p => p.Activo))   // para las tarjetas
+                .Where(s => s.Activo == true);
 
-    if (!string.IsNullOrEmpty(buscar))
-    {
-        query = query.Where(s => s.Nombre.Contains(buscar));
-    }
+            if (!string.IsNullOrEmpty(buscar))
+                query = query.Where(s => s.Nombre.Contains(buscar));
 
-    int totalRegistros = await query.CountAsync();
+            int totalRegistros = await query.CountAsync();
 
-    var survivors = await query
-        .OrderBy(s => s.Nombre)
-        .Skip((pagina - 1) * tamano)
-        .Take(tamano)
-        .ToListAsync();
+            var survivors = await query
+                .OrderBy(s => s.Nombre)
+                .Skip((pagina - 1) * tamano)
+                .Take(tamano)
+                .ToListAsync();
 
-    ViewData["pagina"] = pagina;
-    ViewData["tamano"] = tamano;
-    ViewData["totalRegistros"] = totalRegistros;
-    ViewData["buscar"] = buscar;
+            ViewData["pagina"] = pagina;
+            ViewData["tamano"] = tamano;
+            ViewData["totalRegistros"] = totalRegistros;
+            ViewData["buscar"] = buscar;
 
-    return View(survivors);
-}
+            return View(survivors);
+        }
 
         // GET: Survivors/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -62,7 +62,7 @@ public async Task<IActionResult> Index(string buscar, int pagina = 1, int tamano
         // POST: Survivors/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nombre,Historia,Dificultad")] Survivor survivor)
+        public async Task<IActionResult> Create([Bind("Nombre,Historia,Dificultad,ImagenUrl")] Survivor survivor)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +87,7 @@ public async Task<IActionResult> Index(string buscar, int pagina = 1, int tamano
         // POST: Survivors/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Historia,Dificultad,Activo")] Survivor survivor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Historia,Dificultad,Activo,ImagenUrl")] Survivor survivor)
         {
             if (id != survivor.Id) return NotFound();
 

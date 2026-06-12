@@ -14,36 +14,34 @@ namespace DBDHub.Controllers
             _context = context;
         }
 
- // GET: Killers
-public async Task<IActionResult> Index(string buscar, int pagina = 1, int tamano = 10)
-{
-    // Consulta base solo activos
-    var query = _context.Killers.Where(k => k.Activo == true);
+        // GET: Killers (con paginación, búsqueda y carga de Perks)
+        public async Task<IActionResult> Index(string buscar, int pagina = 1, int tamano = 18)
+        {
+            var query = _context.Killers
+                .Include(k => k.Perks!.Where(p => p.Activo))
+                .Where(k => k.Activo == true);
 
-    // Filtro de búsqueda
-    if (!string.IsNullOrEmpty(buscar))
-    {
-        query = query.Where(k => k.Nombre.Contains(buscar));
-    }
+                        if (!string.IsNullOrEmpty(buscar))
+            {
+                var buscarLower = buscar.ToLower();
+                query = query.Where(k => k.Nombre.ToLower().Contains(buscarLower));
+            }
 
-    // Total de registros para calcular páginas
-    int totalRegistros = await query.CountAsync();
+            int totalRegistros = await query.CountAsync();
 
-    // Aplicar paginación
-    var killers = await query
-        .OrderBy(k => k.Nombre)
-        .Skip((pagina - 1) * tamano)
-        .Take(tamano)
-        .ToListAsync();
+            var killers = await query
+                .OrderBy(k => k.Nombre)
+                .Skip((pagina - 1) * tamano)
+                .Take(tamano)
+                .ToListAsync();
 
-    // Pasar datos a la vista
-    ViewData["pagina"] = pagina;
-    ViewData["tamano"] = tamano;
-    ViewData["totalRegistros"] = totalRegistros;
-    ViewData["buscar"] = buscar;
+            ViewData["pagina"] = pagina;
+            ViewData["tamano"] = tamano;
+            ViewData["totalRegistros"] = totalRegistros;
+            ViewData["buscar"] = buscar;
 
-    return View(killers);
-}
+            return View(killers);
+        }
 
         // GET: Killers/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -58,7 +56,6 @@ public async Task<IActionResult> Index(string buscar, int pagina = 1, int tamano
                 .FirstOrDefaultAsync(m => m.Id == id && m.Activo == true);
 
             if (killer == null) return NotFound();
-
             return View(killer);
         }
 
@@ -71,7 +68,7 @@ public async Task<IActionResult> Index(string buscar, int pagina = 1, int tamano
         // POST: Killers/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nombre,Poder,Velocidad,Dificultad,Historia")] Killer killer)
+        public async Task<IActionResult> Create([Bind("Nombre,Poder,Velocidad,Dificultad,Historia,ImagenUrl")] Killer killer)
         {
             if (ModelState.IsValid)
             {
@@ -98,7 +95,7 @@ public async Task<IActionResult> Index(string buscar, int pagina = 1, int tamano
         // POST: Killers/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Poder,Velocidad,Dificultad,Historia,Activo")] Killer killer)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Poder,Velocidad,Dificultad,Historia,Activo,ImagenUrl")] Killer killer)
         {
             if (id != killer.Id) return NotFound();
 
@@ -106,10 +103,8 @@ public async Task<IActionResult> Index(string buscar, int pagina = 1, int tamano
             {
                 try
                 {
-                    // Mantener la fecha de creación original
-                    var killerOriginal = await _context.Killers.AsNoTracking().FirstOrDefaultAsync(k => k.Id == id);
-                    killer.FechaCreacion = killerOriginal?.FechaCreacion ?? DateTime.UtcNow;
-
+                    var original = await _context.Killers.AsNoTracking().FirstOrDefaultAsync(k => k.Id == id);
+                    killer.FechaCreacion = original?.FechaCreacion ?? DateTime.UtcNow;
                     _context.Update(killer);
                     await _context.SaveChangesAsync();
                 }
@@ -143,7 +138,7 @@ public async Task<IActionResult> Index(string buscar, int pagina = 1, int tamano
             var killer = await _context.Killers.FindAsync(id);
             if (killer != null)
             {
-                killer.Activo = false; // eliminación lógica
+                killer.Activo = false;
                 _context.Update(killer);
                 await _context.SaveChangesAsync();
             }

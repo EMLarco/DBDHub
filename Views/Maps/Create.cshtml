@@ -1,0 +1,36 @@
+@model DBDHub.Models.Map
+@{
+    ViewData["Title"] = "Nuevo Mapa";
+}
+
+<div class="container mt-4">
+    <h1><i class="fas fa-plus-circle me-2"></i>@ViewData["Title"]</h1>
+    <hr />
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="mb-3">
+            <label asp-for="Nombre" class="form-label"></label>
+            <input asp-for="Nombre" class="form-control" />
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ImagenUrl" class="form-label"></label>
+            <input asp-for="ImagenUrl" class="form-control" placeholder="https://..." />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Tipo" class="form-label"></label>
+            <select asp-for="Tipo" class="form-control">
+                <option value="Original">Original</option>
+                <option value="Variante">Variante</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label asp-for="OriginalMapId" class="form-label">Mapa Original (si es variante)</label>
+            <select asp-for="OriginalMapId" class="form-control" asp-items="ViewBag.OriginalMapId">
+                <option value="">-- Ninguno --</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Crear</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

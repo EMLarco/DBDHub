@@ -3,25 +3,32 @@
     ViewData["Title"] = "Nuevo Superviviente";
 }
 
-<h1>@ViewData["Title"]</h1>
-<hr />
-<form asp-action="Create">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="mb-3">
-        <label asp-for="Nombre" class="form-label"></label>
-        <input asp-for="Nombre" class="form-control" />
-        <span asp-validation-for="Nombre" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Historia" class="form-label"></label>
-        <textarea asp-for="Historia" class="form-control" rows="5"></textarea>
-        <span asp-validation-for="Historia" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Dificultad" class="form-label"></label>
-        <input asp-for="Dificultad" class="form-control" />
-        <span asp-validation-for="Dificultad" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Crear</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-</form>
+<div class="container mt-4">
+    <h1><i class="fas fa-plus-circle me-2"></i>@ViewData["Title"]</h1>
+    <hr />
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="mb-3">
+            <label asp-for="Nombre" class="form-label"></label>
+            <input asp-for="Nombre" class="form-control" />
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Historia" class="form-label"></label>
+            <textarea asp-for="Historia" class="form-control" rows="5"></textarea>
+            <span asp-validation-for="Historia" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Dificultad" class="form-label"></label>
+            <input asp-for="Dificultad" class="form-control" />
+            <span asp-validation-for="Dificultad" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ImagenUrl" class="form-label">URL de la imagen</label>
+            <input asp-for="ImagenUrl" class="form-control" placeholder="https://..." />
+            <span asp-validation-for="ImagenUrl" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Crear</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

@@ -1,0 +1,142 @@
+@model DBDHub.Models.Match
+@{
+    ViewData["Title"] = "Detalle de Partida";
+}
+
+<div class="container-fluid mt-4 px-3 text-light">
+    <h1 class="mb-4"><i class="fas fa-gamepad me-2"></i>Partida del @Model.FechaPartida.ToString("dd/MM/yyyy HH:mm")</h1>
+
+    <div class="row">
+        <!-- COLUMNA IZQUIERDA: KILLER -->
+        <div class="col-lg-5 mb-4">
+            <div class="card bg-dark border-danger">
+                <div class="card-header bg-danger text-white"><i class="fas fa-skull me-2"></i>Killer</div>
+                <div class="card-body">
+                    @if (Model.Killer != null)
+                    {
+                        <div class="text-center mb-3">
+                            <img src="@(Model.Killer.ImagenUrl ?? "/images/placeholder-killer.png")" 
+                                 alt="@Model.Killer.Nombre" class="img-fluid rounded" style="max-height:200px;" />
+                            <h3 class="mt-2">@Model.Killer.Nombre</h3>
+                            <p class="text-muted">@Model.Killer.Poder</p>
+                        </div>
+
+                        <h5><i class="fas fa-star me-2"></i>Perks</h5>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            @foreach (var perk in Model.Killer.Perks!)
+                            {
+                                <div class="text-center perk-detail-item">
+                                    @if (!string.IsNullOrEmpty(perk.ImagenUrl))
+                                    {
+                                        <img src="@perk.ImagenUrl" alt="@perk.Nombre" class="perk-detail-img" />
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-star text-warning fs-3"></i>
+                                    }
+                                    <p class="small mt-1">@perk.Nombre</p>
+                                </div>
+                            }
+                        </div>
+
+                        <h5><i class="fas fa-puzzle-piece me-2"></i>Addons</h5>
+                        <div class="d-flex flex-wrap gap-2">
+                            @foreach (var addon in Model.Killer.Addons!)
+                            {
+                                <span class="badge bg-secondary me-1">@addon.Nombre</span>
+                            }
+                            @if (!Model.Killer.Addons!.Any())
+                            {
+                                <span class="text-muted">Sin addons</span>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Killer no disponible</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMNA CENTRAL: SUPERVIVIENTES -->
+        <div class="col-lg-4 mb-4">
+            <div class="card bg-dark border-info">
+                <div class="card-header bg-info text-dark"><i class="fas fa-users me-2"></i>Supervivientes</div>
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (var surv in new[] { Model.Survivor1, Model.Survivor2, Model.Survivor3, Model.Survivor4 })
+                        {
+                            <div class="col-6 mb-3">
+                                @if (surv != null)
+                                {
+                                    <div class="text-center">
+                                        <img src="@(surv.ImagenUrl ?? "/images/placeholder-survivor.png")" 
+                                             alt="@surv.Nombre" class="img-fluid rounded" style="max-height:80px;" />
+                                        <p class="mt-1 mb-2 fw-bold">@surv.Nombre</p>
+                                        <div class="d-flex flex-wrap justify-content-center gap-1">
+                                            @foreach (var perk in surv.Perks!)
+                                            {
+                                                <img src="@perk.ImagenUrl" alt="@perk.Nombre" class="perk-detail-img-small" title="@perk.Nombre" />
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="text-center text-muted">-</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLUMNA DERECHA: ESTADÍSTICAS -->
+        <div class="col-lg-3 mb-4">
+            <div class="card bg-dark border-warning">
+                <div class="card-header bg-warning text-dark"><i class="fas fa-chart-bar me-2"></i>Estadísticas</div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <span class="display-4 text-warning">@Model.TotalScore.ToString("N0")</span>
+                        <p class="text-muted">Puntuación total</p>
+                    </div>
+                    <hr class="bg-secondary" />
+                    <p><strong><i class="fas fa-map me-2"></i>Mapa:</strong> @Model.MapName</p>
+                    @if (Model.Map != null)
+                    {
+                        <img src="@Model.Map.ImagenUrl" alt="@Model.Map.Nombre" class="img-fluid rounded mb-2" style="max-height:100px;" />
+                    }
+                    <p><strong><i class="fas fa-location-dot me-2"></i>Ubicación:</strong> @Model.Location</p>
+                    <p><strong><i class="fas fa-clock me-2"></i>Duración:</strong> @TimeSpan.FromSeconds(Model.DuracionSegundos).ToString(@"mm\:ss")</p>
+                    <p>
+                        <strong>Resultado:</strong>
+                        <span class="badge @GetResultClass(Model.Result)">@Model.Result</span>
+                    </p>
+                    <hr class="bg-secondary" />
+                    <p><strong>Detalles:</strong></p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge bg-secondary">@Model.Detail1.ToString("N0")</span>
+                        <span class="badge bg-secondary">@Model.Detail2.ToString("N0")</span>
+                        <span class="badge bg-secondary">@Model.Detail3.ToString("N0")</span>
+                        <span class="badge bg-secondary">@Model.Detail4.ToString("N0")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetResultClass(string result)
+    {
+        return result switch
+        {
+            "Merciless Killer" => "bg-warning text-dark",
+            "Ruthless Killer" => "bg-secondary text-dark",
+            "Dead" => "bg-danger text-white",
+            _ => "bg-dark"
+        };
+    }
+}

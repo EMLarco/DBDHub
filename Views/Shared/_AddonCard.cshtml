@@ -1,0 +1,57 @@
+@model DBDHub.Models.Addon
+
+@functions {
+    string GetRarityClass(string? rarity)
+    {
+        return rarity?.ToLower() switch
+        {
+            "común" or "common" => "common",
+            "poco común" or "uncommon" => "uncommon",
+            "raro" or "rare" => "rare",           // verde clásico
+            // "raro" or "rare" => "rare-new",   // azul (rework), cambia si prefieres esa versión
+            "muy raro" or "very rare" => "very-rare",
+            "ultra raro" or "ultra rare" => "ultra-rare",
+            "evento" or "event" => "event",
+            _ => ""
+        };
+    }
+
+    string GetRarityTextClass(string? rarity)
+    {
+        return rarity?.ToLower() switch
+        {
+            "común" or "common" => "common-text",
+            "poco común" or "uncommon" => "uncommon-text",
+            "raro" or "rare" => "rare-text",
+            "muy raro" or "very rare" => "very-rare-text",
+            "ultra raro" or "ultra rare" => "ultra-rare-text",
+            "evento" or "event" => "event-text",
+            _ => ""
+        };
+    }
+}
+
+<a asp-action="Details" asp-route-id="@Model.Id" class="text-decoration-none">
+    <div class="addon-card">
+        <div class="addon-box-wrapper">
+            <div class="dbd-addon @GetRarityClass(Model.Rareza)">
+                @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+                {
+                    <img src="@Model.ImagenUrl" alt="@Model.Nombre" />
+                }
+                else
+                {
+                    <i class="fas fa-puzzle-piece text-white fs-2"></i>
+                }
+            </div>
+        </div>
+        <div class="addon-info">
+            <h6 class="addon-name">@Model.Nombre</h6>
+            <span class="badge @GetRarityTextClass(Model.Rareza)">@Model.Rareza</span>
+            @if (Model.Killer != null)
+            {
+                <p class="text-muted mt-1 mb-0"><small>@Model.Killer.Nombre</small></p>
+            }
+        </div>
+    </div>
+</a>

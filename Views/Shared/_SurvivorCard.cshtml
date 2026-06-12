@@ -1,0 +1,67 @@
+@model DBDHub.Models.Survivor
+
+<a asp-action="Details" asp-route-id="@Model.Id" class="text-decoration-none survivor-card-link">
+    <div class="survivor-card">
+        <div class="portrait-wrapper">
+            <img src="@(Model.ImagenUrl ?? "/images/placeholder-survivor.png")"
+                 alt="@Model.Nombre"
+                 class="survivor-img"
+                 onerror="this.onerror=null;this.src='/images/placeholder-survivor.png';" />
+            <div class="overlay-fog"></div>
+
+            <!-- Diamantes de perks (morados, aparecen al hacer hover) -->
+            @if (Model.Perks != null && Model.Perks.Any())
+            {
+                <div class="perk-slots-overlay">
+                    @foreach (var perk in Model.Perks.Take(3))
+                    {
+                        <div class="perk-card-small purple" title="@perk.Nombre - @perk.Descripcion">
+                            <div class="perk-rhombus">
+                                <div class="perk-content">
+                                    @if (!string.IsNullOrEmpty(perk.ImagenUrl))
+                                    {
+                                        <img src="@perk.ImagenUrl" alt="@perk.Nombre" class="perk-icon" />
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-star perk-icon" style="color: #ffd700; font-size: 1.2rem; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;"></i>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @for (int i = Model.Perks.Count; i < 3; i++)
+                    {
+                        <div class="perk-card-small purple" title="Sin perk">
+                            <div class="perk-rhombus">
+                                <div class="perk-content">
+                                    <i class="fas fa-star perk-icon" style="color: #444; font-size: 1.2rem; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="perk-slots-overlay">
+                    @for (int i = 0; i < 3; i++)
+                    {
+                        <div class="perk-card-small purple" title="Sin perks">
+                            <div class="perk-rhombus">
+                                <div class="perk-content">
+                                    <i class="fas fa-star perk-icon" style="color: #444; font-size: 1.2rem; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="survivor-info">
+            <span class="survivor-title">@Model.Nombre</span>
+            <span class="prestige-level">@(Model.Dificultad ?? "Normal")</span>
+        </div>
+    </div>
+</a>

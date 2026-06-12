@@ -1,0 +1,12 @@
+@{
+    ViewData["Title"] = "Total de Partidas";
+}
+
+<div class="container mt-4">
+    <h2 class="text-warning"><i class="fas fa-calculator me-2"></i>@ViewData["Title"]</h2>
+    <div class="alert alert-dark border-warning mt-4">
+        <h4 class="alert-heading">Total de partidas registradas</h4>
+        <p class="display-4 text-warning">@ViewBag.TotalMatches.ToString("N0")</p>
+    </div>
+    <a asp-action="Index" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Volver</a>
+</div>

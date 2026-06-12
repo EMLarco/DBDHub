@@ -1,0 +1,71 @@
+@model IEnumerable<DBDHub.Models.Perk>
+@{
+    ViewData["Title"] = "Perks";
+    int pagina = (int)ViewData["pagina"];
+    int tamano = (int)ViewData["tamano"];
+    int totalRegistros = (int)ViewData["totalRegistros"];
+    string buscar = ViewData["buscar"]?.ToString() ?? "";
+    string tipo = ViewData["tipo"]?.ToString() ?? "";
+    int totalPaginas = (int)Math.Ceiling((double)totalRegistros / tamano);
+}
+
+<div class="container-fluid mt-4 px-3">
+    <h1 class="mb-4" style="color: #ff3e3e; text-transform: uppercase; letter-spacing: 2px;">
+        <i class="fas fa-star me-2"></i>@ViewData["Title"]
+    </h1>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a asp-action="Create" class="btn btn-success"><i class="fas fa-plus-circle"></i> Nueva Perk</a>
+        <form asp-action="Index" method="get" class="d-flex">
+            <input type="text" name="buscar" class="form-control me-2" placeholder="Buscar..." value="@buscar" />
+            <select name="tipo" class="form-control me-2" style="width:auto;">
+                <option value="">Todos</option>
+                <option value="Killer" selected="@(tipo == "Killer" ? "selected" : null)">Killer</option>
+                <option value="Survivor" selected="@(tipo == "Survivor" ? "selected" : null)">Survivor</option>
+            </select>
+            <button type="submit" class="btn btn-primary me-1"><i class="fas fa-search"></i></button>
+            <a asp-action="Index" class="btn btn-secondary"><i class="fas fa-times"></i></a>
+        </form>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning text-center">No se encontraron perks.</div>
+    }
+    else
+    {
+        <div class="row g-3">
+            @foreach (var perk in Model)
+            {
+                <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                    @await Html.PartialAsync("_PerkCard", perk)
+                </div>
+            }
+        </div>
+    }
+
+    @if (totalPaginas > 1)
+    {
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(pagina == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-route-pagina="@(pagina - 1)" asp-route-buscar="@buscar" asp-route-tipo="@tipo">
+                        <i class="fas fa-chevron-left"></i> Anterior
+                    </a>
+                </li>
+                @for (int i = 1; i <= totalPaginas; i++)
+                {
+                    <li class="page-item @(i == pagina ? "active" : "")">
+                        <a class="page-link" asp-route-pagina="@i" asp-route-buscar="@buscar" asp-route-tipo="@tipo">@i</a>
+                    </li>
+                }
+                <li class="page-item @(pagina == totalPaginas ? "disabled" : "")">
+                    <a class="page-link" asp-route-pagina="@(pagina + 1)" asp-route-buscar="@buscar" asp-route-tipo="@tipo">
+                        Siguiente <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    }
+    <p class="text-muted text-center">Página @pagina de @totalPaginas — Total: @totalRegistros perks</p>
+</div>

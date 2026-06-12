@@ -1,9 +1,10 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;   // necesario
 using Microsoft.EntityFrameworkCore;
 using DBDHub.Models;
 
 namespace DBDHub.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<ApplicationUser>   // cambio importante
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -16,18 +17,18 @@ namespace DBDHub.Data
         public DbSet<Addon> Addons { get; set; }
         public DbSet<Map> Maps { get; set; }
         public DbSet<MapKiller> MapKillers { get; set; }
-
-        // Opcional para la fase final
-        // public DbSet<MatchRecord> MatchRecords { get; set; }
+        public DbSet<Match> Matches { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);   // ¡importante para Identity!
+
             // Relación Perk → Killer (1:N)
             modelBuilder.Entity<Perk>()
                 .HasOne(p => p.Killer)
                 .WithMany(k => k.Perks)
                 .HasForeignKey(p => p.KillerId)
-                .OnDelete(DeleteBehavior.Restrict); // Si se borra un killer, no se borran sus perks automáticamente
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Relación Perk → Survivor (1:N)
             modelBuilder.Entity<Perk>()
@@ -41,7 +42,7 @@ namespace DBDHub.Data
                 .HasOne(a => a.Killer)
                 .WithMany(k => k.Addons)
                 .HasForeignKey(a => a.KillerId)
-                .OnDelete(DeleteBehavior.Cascade); // Si se borra un killer, se borran sus addons
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Auto-referencia Map → Map (variante / original)
             modelBuilder.Entity<Map>()
@@ -60,6 +61,43 @@ namespace DBDHub.Data
                 .HasOne(mk => mk.Killer)
                 .WithMany(k => k.MapKillers)
                 .HasForeignKey(mk => mk.KillerId);
+
+            // Relaciones de Match
+            modelBuilder.Entity<Match>()
+                .HasOne(m => m.Killer)
+                .WithMany()
+                .HasForeignKey(m => m.KillerId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Match>()
+                .HasOne(m => m.Survivor1)
+                .WithMany()
+                .HasForeignKey(m => m.Survivor1Id)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Match>()
+                .HasOne(m => m.Survivor2)
+                .WithMany()
+                .HasForeignKey(m => m.Survivor2Id)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Match>()
+                .HasOne(m => m.Survivor3)
+                .WithMany()
+                .HasForeignKey(m => m.Survivor3Id)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Match>()
+                .HasOne(m => m.Survivor4)
+                .WithMany()
+                .HasForeignKey(m => m.Survivor4Id)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Match>()
+                .HasOne(m => m.Map)
+                .WithMany()
+                .HasForeignKey(m => m.MapId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             // Índices para mejorar el rendimiento en consultas masivas
             modelBuilder.Entity<Killer>().HasIndex(k => k.Nombre);

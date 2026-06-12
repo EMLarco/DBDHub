@@ -1,0 +1,86 @@
+@model DBDHub.Models.Killer
+
+<a asp-action="Details" asp-route-id="@Model.Id" class="text-decoration-none killer-card-link">
+    <div class="killer-card">
+        <div class="portrait-wrapper">
+            <!-- Imagen del killer -->
+            <img src="@(Model.ImagenUrl ?? "/images/placeholder-killer.png")"
+                 alt="@Model.Nombre"
+                 class="killer-img"
+                 onerror="this.onerror=null;this.src='/images/placeholder-killer.png';" />
+
+            <!-- Overlay de niebla/sangre -->
+            <div class="overlay-glow"></div>
+
+            <!-- Diamantes de perks (superpuestos sobre la imagen) -->
+            @if (Model.Perks != null && Model.Perks.Any())
+            {
+                <div class="perk-slots-overlay">
+                    @foreach (var perk in Model.Perks.Take(3))
+                    {
+                        <div class="perk-card-small purple" title="@perk.Nombre - @perk.Descripcion">
+                            <div class="perk-rhombus">
+                                <div class="perk-content">
+                                    @if (!string.IsNullOrEmpty(perk.ImagenUrl))
+                                    {
+                                        <img src="@perk.ImagenUrl" alt="@perk.Nombre" class="perk-icon" />
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-star perk-icon" style="color: #ffd700; font-size: 1.2rem; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;"></i>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @for (int i = Model.Perks.Count; i < 3; i++)
+                    {
+                        <div class="perk-card-small purple" title="Sin perk">
+                            <div class="perk-rhombus">
+                                <div class="perk-content">
+                                    <i class="fas fa-star perk-icon" style="color: #444; font-size: 1.2rem; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="perk-slots-overlay">
+                    @for (int i = 0; i < 3; i++)
+                    {
+                        <div class="perk-card-small purple" title="Sin perks">
+                            <div class="perk-rhombus">
+                                <div class="perk-content">
+                                    <i class="fas fa-star perk-icon" style="color: #444; font-size: 1.2rem; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Barra inferior con nombre y dificultad -->
+        <div class="killer-info">
+            <span class="killer-title">@Model.Nombre</span>
+            <span class="killer-difficulty @GetDifficultyClass(Model.Dificultad)">
+                @(Model.Dificultad ?? "Unknown")
+            </span>
+        </div>
+    </div>
+</a>
+
+@functions {
+    string GetDifficultyClass(string? difficulty)
+    {
+        return difficulty?.ToLower() switch
+        {
+            "fácil" or "easy" => "easy",
+            "moderado" or "moderate" => "intermediate",
+            "difícil" or "hard" or "muy difícil" or "very hard" => "hard",
+            _ => ""
+        };
+    }
+}

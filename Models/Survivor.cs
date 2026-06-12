@@ -19,5 +19,8 @@ namespace DBDHub.Models
         public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
 
         public ICollection<Perk>? Perks { get; set; }
+
+        [StringLength(500)]
+        public string? ImagenUrl { get; set; }
     }
 }

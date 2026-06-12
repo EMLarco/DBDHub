@@ -7,13 +7,13 @@ namespace DBDHub.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = "El nombre es obligatorio")]
-        [StringLength(100, ErrorMessage = "Máximo 100 caracteres")]
+        [StringLength(100)]
         public string Nombre { get; set; } = string.Empty;
 
         [StringLength(200)]
         public string? Poder { get; set; }
 
-        [Range(0, 20, ErrorMessage = "La velocidad debe estar entre 0 y 20")]
+        [Range(0, 20)]
         public decimal Velocidad { get; set; }
 
         [StringLength(50)]
@@ -21,13 +21,12 @@ namespace DBDHub.Models
 
         public string? Historia { get; set; }
 
-        // Campo de eliminación lógica
-        public bool Activo { get; set; } = true;
+        [StringLength(500)]
+        public string? ImagenUrl { get; set; }   // <-- NUEVO
 
-        // Campo de auditoría
+        public bool Activo { get; set; } = true;
         public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
 
-        // Relaciones
         public ICollection<Perk>? Perks { get; set; }
         public ICollection<Addon>? Addons { get; set; }
         public ICollection<MapKiller>? MapKillers { get; set; }

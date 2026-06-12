@@ -3,32 +3,100 @@
     ViewData["Title"] = "Detalle del Superviviente";
 }
 
-<h1>@Model.Nombre</h1>
-<hr />
-<dl class="row">
-    <dt class="col-sm-3">Historia</dt>
-    <dd class="col-sm-9">@(Model.Historia ?? "-")</dd>
-    <dt class="col-sm-3">Dificultad</dt>
-    <dd class="col-sm-9">@(Model.Dificultad ?? "-")</dd>
-</dl>
+<div class="container-fluid mt-4 px-3">
+    <!-- Cabecera con nombre y botones -->
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <h1 class="mb-0" style="color: #60a5fa; text-transform: uppercase; letter-spacing: 2px; text-shadow: 2px 2px 4px #000;">
+            <i class="fas fa-user-shield me-2"></i>@Model.Nombre
+        </h1>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning btn-sm me-1">
+                <i class="fas fa-edit"></i> Editar
+            </a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm me-1">
+                <i class="fas fa-trash-alt"></i> Eliminar
+            </a>
+            <a asp-action="Index" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
 
-@if (Model.Perks?.Any() == true)
-{
-    <h3>Perks</h3>
-    <table class="table table-sm">
-        <thead><tr><th>Nombre</th><th>Descripción</th><th>Nivel</th></tr></thead>
-        <tbody>
-        @foreach (var perk in Model.Perks)
-        {
-            <tr>
-                <td>@perk.Nombre</td>
-                <td>@(perk.Descripcion ?? "-")</td>
-                <td>@perk.Nivel</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
+    <div class="row">
+        <!-- Columna izquierda: imagen del superviviente (estilo carta survivor) -->
+        <div class="col-md-5 col-lg-4 d-flex justify-content-center">
+            <div class="survivor-card" style="width: 280px; height:  350px; cursor: default; transform: none;">
+                <div class="portrait-wrapper" style="height: auto; max-height: 500px;">
+                    <img src="@(Model.ImagenUrl ?? "/images/placeholder-survivor.png")"
+                         alt="@Model.Nombre"
+                         class="survivor-img"
+                         style="object-fit: contain; width: 100%; height: auto; display: block; background: #0f1115;"
+                         onerror="this.onerror=null;this.src='/images/placeholder-survivor.png';" />
+                    <div class="overlay-fog"></div>
+                </div>
+                <div class="survivor-info">
+                    <span class="survivor-title">@Model.Nombre</span>
+                    <span class="prestige-level">@(Model.Dificultad ?? "Normal")</span>
+                </div>
+            </div>
+        </div>
 
-<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
-<a asp-action="Index" class="btn btn-secondary">Volver</a>
+        <!-- Columna derecha: información textual -->
+        <div class="col-md-7 col-lg-8">
+            <div class="mb-4">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p class="mb-1"><strong style="color: #60a5fa;">Dificultad:</strong></p>
+                        <p class="text-light">@(Model.Dificultad ?? "Normal")</p>
+                    </div>
+                </div>
+                <p class="mb-1"><strong style="color: #60a5fa;">Historia:</strong></p>
+                <p class="text-light" style="line-height: 1.6;">@(Model.Historia ?? "Sin historia registrada.")</p>
+            </div>
+
+            <!-- Perks (tabla) -->
+            @if (Model.Perks?.Any() == true)
+            {
+                <h3 class="mt-4 mb-3" style="color: #60a5fa; border-bottom: 2px dashed #3b6687; padding-bottom: 5px;">
+                    <i class="fas fa-star me-2"></i>Perks
+                </h3>
+                <div class="table-responsive">
+                    <table class="table table-dark table-striped table-hover align-middle">
+                        <thead style="background-color: #1e293b;">
+                            <tr>
+                                <th style="width: 70px;">Imagen</th>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var perk in Model.Perks)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        @if (!string.IsNullOrEmpty(perk.ImagenUrl))
+                                        {
+                                            <img src="@perk.ImagenUrl" alt="@perk.Nombre" class="perk-detail-img" />
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-star text-warning fs-4"></i>
+                                        }
+                                    </td>
+                                    <td class="fw-bold">@perk.Nombre</td>
+                                    <td>@(perk.Descripcion ?? "-")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-secondary mt-3">
+                    <i class="fas fa-info-circle me-2"></i> Este superviviente no tiene perks registradas.
+                </div>
+            }
+        </div>
+    </div>
+</div>

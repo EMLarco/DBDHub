@@ -37,6 +37,12 @@
         <span asp-validation-for="Historia" class="text-danger"></span>
     </div>
 
+    <div class="mb-3">
+    <label asp-for="ImagenUrl" class="form-label"></label>
+    <input asp-for="ImagenUrl" class="form-control" placeholder="https://..." />
+    <span asp-validation-for="ImagenUrl" class="text-danger"></span>
+</div>
+
     <button type="submit" class="btn btn-primary">Guardar cambios</button>
     <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
 </form>

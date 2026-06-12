@@ -1,0 +1,137 @@
+@model IEnumerable<DBDHub.Models.Match>
+@{
+    ViewData["Title"] = "Partidas";
+    int pagina = (int)ViewData["pagina"];
+    int tamano = (int)ViewData["tamano"];
+    int total = (int)ViewData["total"];
+    int? killerId = ViewData["killerId"] as int?;
+    int? mapId = ViewData["mapId"] as int?;
+    int? survivorId = ViewData["survivorId"] as int?;
+    int totalPaginas = (int)Math.Ceiling((double)total / tamano);
+
+    // Lógica para mostrar un rango de páginas
+    int mostrarMaximo = 7;
+    int mitad = mostrarMaximo / 2;
+    int inicio = Math.Max(1, pagina - mitad);
+    int fin = Math.Min(totalPaginas, inicio + mostrarMaximo - 1);
+    if (fin - inicio < mostrarMaximo - 1)
+        inicio = Math.Max(1, fin - mostrarMaximo + 1);
+}
+
+<div class="container-fluid mt-4 px-3">
+    <h1 class="mb-4" style="color:#e8c252"><i class="fas fa-history me-2"></i>@ViewData["Title"]</h1>
+
+    <!-- FILTROS -->
+    <form asp-action="Index" method="get" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <select name="killerId" class="form-select" asp-items="ViewBag.KillerList">
+                <option value="">Todos los killers</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="mapId" class="form-select" asp-items="ViewBag.MapList">
+                <option value="">Todos los mapas</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="survivorId" class="form-select" asp-items="ViewBag.SurvivorList">
+                <option value="">Todos los supervivientes</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-danger w-100"><i class="fas fa-filter"></i> Filtrar</button>
+        </div>
+        <div class="col-md-1">
+            <a asp-action="Index" class="btn btn-secondary w-100"><i class="fas fa-times"></i></a>
+        </div>
+    </form>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning">No se encontraron partidas.</div>
+    }
+    else
+    {
+        <div class="match-list">
+            @foreach (var match in Model)
+            {
+                <!-- Cada tarjeta es ahora un div clickeable, no un enlace -->
+                <div class="match-card" onclick="loadMatchDetails(@match.Id)" style="cursor:pointer;">
+                    @* Reutilizamos la misma estructura de _MatchCard pero sin el <a> *@
+                    <partial name="_MatchCardContent" model="match" />
+                </div>
+            }
+        </div>
+    }
+
+    @* PAGINACIÓN (la misma de antes, con filtros) *@
+    @if (totalPaginas > 1)
+    {
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(pagina == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-route-pagina="@(pagina - 1)" asp-route-killerId="@killerId" asp-route-mapId="@mapId" asp-route-survivorId="@survivorId">
+                        <i class="fas fa-chevron-left"></i> Anterior
+                    </a>
+                </li>
+                @if (inicio > 1)
+                {
+                    <li class="page-item"><a class="page-link" asp-route-pagina="1" asp-route-killerId="@killerId" asp-route-mapId="@mapId" asp-route-survivorId="@survivorId">1</a></li>
+                    if (inicio > 2) { <li class="page-item disabled"><span class="page-link">…</span></li> }
+                }
+                @for (int i = inicio; i <= fin; i++)
+                {
+                    <li class="page-item @(i == pagina ? "active" : "")">
+                        <a class="page-link" asp-route-pagina="@i" asp-route-killerId="@killerId" asp-route-mapId="@mapId" asp-route-survivorId="@survivorId">@i</a>
+                    </li>
+                }
+                @if (fin < totalPaginas)
+                {
+                    if (fin < totalPaginas - 1) { <li class="page-item disabled"><span class="page-link">…</span></li> }
+                    <li class="page-item"><a class="page-link" asp-route-pagina="@totalPaginas" asp-route-killerId="@killerId" asp-route-mapId="@mapId" asp-route-survivorId="@survivorId">@totalPaginas</a></li>
+                }
+                <li class="page-item @(pagina == totalPaginas ? "disabled" : "")">
+                    <a class="page-link" asp-route-pagina="@(pagina + 1)" asp-route-killerId="@killerId" asp-route-mapId="@mapId" asp-route-survivorId="@survivorId">
+                        Siguiente <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    }
+    <p class="text-muted text-center">Página @pagina de @totalPaginas — Total: @total partidas</p>
+</div>
+
+<!-- MODAL para detalles -->
+<div class="modal fade" id="matchDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content bg-dark border border-danger">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title"><i class="fas fa-gamepad me-2"></i>Detalle de Partida</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div id="matchDetailContent">
+                <!-- Se carga vía AJAX -->
+                <div class="text-center py-5">
+                    <div class="spinner-border text-danger" role="status"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        async function loadMatchDetails(id) {
+            const modal = new bootstrap.Modal(document.getElementById('matchDetailModal'));
+            modal.show();
+            try {
+                const response = await fetch(`/Matches/GetDetails/${id}`);
+                if (!response.ok) throw new Error('Error');
+                const html = await response.text();
+                document.getElementById('matchDetailContent').innerHTML = html;
+            } catch {
+                document.getElementById('matchDetailContent').innerHTML = '<div class="alert alert-danger m-3">No se pudo cargar el detalle.</div>';
+            }
+        }
+    </script>
+}

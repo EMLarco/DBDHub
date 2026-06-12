@@ -1,0 +1,33 @@
+@{
+    ViewData["Title"] = "Reportes y Estadísticas";
+}
+
+<div class="container-fluid mt-4">
+    <h1 class="text-warning"><i class="fas fa-chart-bar me-2"></i>@ViewData["Title"]</h1>
+    <div class="list-group mt-4">
+        <a asp-action="TotalMatches" class="list-group-item list-group-item-action bg-dark text-light border-secondary">
+            <i class="fas fa-calculator me-2"></i> Total de partidas
+        </a>
+        <a asp-action="AverageScore" class="list-group-item list-group-item-action bg-dark text-light border-secondary">
+            <i class="fas fa-chart-line me-2"></i> Promedio de puntuación
+        </a>
+        <a asp-action="TotalDetails" class="list-group-item list-group-item-action bg-dark text-light border-secondary">
+            <i class="fas fa-list-ol me-2"></i> Suma de detalles
+        </a>
+        <a asp-action="MapStats" class="list-group-item list-group-item-action bg-dark text-light border-secondary">
+            <i class="fas fa-map me-2"></i> Estadísticas por mapa
+        </a>
+        <a asp-action="ResultDistribution" class="list-group-item list-group-item-action bg-dark text-light border-secondary">
+            <i class="fas fa-trophy me-2"></i> Distribución de resultados
+        </a>
+        <a asp-action="TopKillers" class="list-group-item list-group-item-action bg-dark text-light border-secondary">
+            <i class="fas fa-skull me-2"></i> Top 10 asesinos más usados
+        </a>
+        <a asp-action="TopSurvivors" class="list-group-item list-group-item-action bg-dark text-light border-secondary">
+            <i class="fas fa-user-shield me-2"></i> Top 10 supervivientes más usados
+        </a>
+        <a asp-action="SearchByMap" class="list-group-item list-group-item-action bg-dark text-light border-secondary">
+            <i class="fas fa-search me-2"></i> Buscar partidas por mapa
+        </a>
+    </div>
+</div>

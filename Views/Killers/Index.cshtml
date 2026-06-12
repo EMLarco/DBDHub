@@ -13,66 +13,43 @@
         <i class="fas fa-skull me-2"></i>@ViewData["Title"]
     </h1>
 
-    <p>
+    <div class="d-flex justify-content-between align-items-center mb-3">
         <a asp-action="Create" class="btn btn-success">
             <i class="fas fa-plus-circle"></i> Nuevo asesino
         </a>
-    </p>
-
-    @* Buscador *@
-    <form asp-action="Index" method="get" class="mb-4">
-        <div class="input-group">
-            <input type="text" name="buscar" class="form-control" placeholder="Buscar asesino..." value="@buscar" />
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-search"></i> Buscar
+        <form asp-action="Index" method="get" class="d-flex">
+            <input type="text" name="buscar" class="form-control me-2" placeholder="Buscar asesino..." value="@buscar" />
+            <button type="submit" class="btn btn-primary me-1">
+                <i class="fas fa-search"></i>
             </button>
             <a asp-action="Index" class="btn btn-secondary">
-                <i class="fas fa-times"></i> Limpiar
+                <i class="fas fa-times"></i>
             </a>
-        </div>
-    </form>
-
-    @* Tabla *@
-    <div class="table-responsive">
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th><i class="fas fa-user-secret"></i> Nombre</th>
-                    <th><i class="fas fa-bolt"></i> Poder</th>
-                    <th><i class="fas fa-tachometer-alt"></i> Dificultad</th>
-                    <th><i class="fas fa-running"></i> Velocidad</th>
-                    <th><i class="fas fa-cogs"></i> Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-        @foreach (var item in Model)
-        {
-                <tr>
-                    <td>@item.Nombre</td>
-                    <td>@(item.Poder ?? "-")</td>
-                    <td>@(item.Dificultad ?? "-")</td>
-                    <td>@item.Velocidad</td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info" title="Detalle">
-                            <i class="fas fa-eye"></i>
-                        </a>
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning" title="Editar">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger" title="Eliminar">
-                            <i class="fas fa-trash-alt"></i>
-                        </a>
-                    </td>
-                </tr>
-        }
-            </tbody>
-        </table>
+        </form>
     </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning text-center">
+            <i class="fas fa-exclamation-triangle me-2"></i>No se encontraron asesinos.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var killer in Model)
+            {
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+                @await Html.PartialAsync("_KillerCard", killer)
+            </div>
+            }
+        </div>
+    }
 
     @* Paginación *@
     @if (totalPaginas > 1)
     {
-        <nav aria-label="Paginación">
+        <nav aria-label="Paginación" class="mt-4">
             <ul class="pagination justify-content-center">
                 <li class="page-item @(pagina == 1 ? "disabled" : "")">
                     <a class="page-link" asp-action="Index" asp-route-pagina="@(pagina - 1)" asp-route-buscar="@buscar">
@@ -94,7 +71,39 @@
         </nav>
     }
 
-    <p class="text-muted text-center">
+    <p class="text-muted text-center mt-2">
         <i class="fas fa-hashtag"></i> Página @pagina de @totalPaginas — Total: @totalRegistros asesinos
     </p>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tiers = ['purple-tier', 'green-tier', 'yellow-tier'];
+            let currentTierIndex = 0; // empezamos todos en púrpura
+
+            // Seleccionamos todos los diamantes
+            const allPerks = document.querySelectorAll('.dbd-perk-background');
+
+            // Función para aplicar la clase actual a todos
+            function applyTierToAll() {
+                const currentClass = tiers[currentTierIndex];
+                allPerks.forEach(bg => {
+                    // Removemos cualquier tier anterior
+                    bg.classList.remove('purple-tier', 'green-tier', 'yellow-tier');
+                    // Añadimos la nueva
+                    bg.classList.add(currentClass);
+                });
+            }
+
+            // Aplicar la inicial (púrpura)
+            applyTierToAll();
+
+            // Cambiar todos juntos cada 1 segundo
+            setInterval(() => {
+                currentTierIndex = (currentTierIndex + 1) % tiers.length;
+                applyTierToAll();
+            }, 1000);
+        });
+    </script>
+}

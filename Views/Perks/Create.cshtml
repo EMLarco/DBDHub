@@ -1,0 +1,56 @@
+@model DBDHub.Models.Perk
+@{
+    ViewData["Title"] = "Nueva Perk";
+}
+
+<div class="container mt-4">
+    <h1><i class="fas fa-plus-circle me-2"></i>@ViewData["Title"]</h1>
+    <hr />
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="Nombre" class="form-label"></label>
+            <input asp-for="Nombre" class="form-control" />
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Descripcion" class="form-label"></label>
+            <textarea asp-for="Descripcion" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Descripcion" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Nivel" class="form-label"></label>
+            <input asp-for="Nivel" class="form-control" type="number" min="1" max="3" />
+            <span asp-validation-for="Nivel" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="TipoPersonaje" class="form-label"></label>
+            <select asp-for="TipoPersonaje" class="form-control">
+                <option value="">-- Selecciona --</option>
+                <option value="Killer">Killer</option>
+                <option value="Survivor">Survivor</option>
+            </select>
+            <span asp-validation-for="TipoPersonaje" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="KillerId" class="form-label">Killer</label>
+            <select asp-for="KillerId" class="form-control" asp-items="ViewBag.KillerId">
+                <option value="">-- Sin Killer --</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label asp-for="SurvivorId" class="form-label">Survivor</label>
+            <select asp-for="SurvivorId" class="form-control" asp-items="ViewBag.SurvivorId">
+                <option value="">-- Sin Survivor --</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ImagenUrl" class="form-label">URL de la imagen</label>
+            <input asp-for="ImagenUrl" class="form-control" placeholder="https://..." />
+            <span asp-validation-for="ImagenUrl" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Crear</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

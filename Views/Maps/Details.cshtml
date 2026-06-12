@@ -1,0 +1,62 @@
+@model DBDHub.Models.Map
+@{
+    ViewData["Title"] = "Detalle del Mapa";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <h1><i class="fas fa-map me-2"></i>@Model.Nombre</h1>
+            <dl class="row mt-3">
+                <dt class="col-sm-4">Tipo</dt>
+                <dd class="col-sm-8">@Model.Tipo</dd>
+                @if (Model.OriginalMap != null)
+                {
+                    <dt class="col-sm-4">Mapa Original</dt>
+                    <dd class="col-sm-8">@Model.OriginalMap.Nombre</dd>
+                }
+            </dl>
+            <div class="mb-3">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning"><i class="fas fa-edit"></i> Editar</a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Eliminar</a>
+                <a asp-action="Index" class="btn btn-secondary">Volver</a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+            {
+                <img src="@Model.ImagenUrl" alt="@Model.Nombre" class="img-fluid rounded border border-secondary" />
+            }
+            else
+            {
+                <div class="alert alert-secondary">Sin imagen</div>
+            }
+        </div>
+    </div>
+
+    @if (Model.MapKillers?.Any() == true)
+    {
+        <h3 class="mt-4"><i class="fas fa-skull me-2"></i>Killers asociados</h3>
+        <ul class="list-group list-group-flush">
+            @foreach (var mk in Model.MapKillers)
+            {
+                <li class="list-group-item bg-dark text-light border-secondary">
+                    @mk.Killer?.Nombre
+                </li>
+            }
+        </ul>
+    }
+
+    @if (Model.Variantes?.Any() == true)
+    {
+        <h3 class="mt-4"><i class="fas fa-copy me-2"></i>Variantes</h3>
+        <ul class="list-group list-group-flush">
+            @foreach (var v in Model.Variantes)
+            {
+                <li class="list-group-item bg-dark text-light border-secondary">
+                    @v.Nombre
+                </li>
+            }
+        </ul>
+    }
+</div>

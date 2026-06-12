@@ -1,0 +1,48 @@
+@model DBDHub.Models.Perk
+
+<div class="perk-dbd-card">
+    <!-- Imagen de la perk (diamante o cuadrada) -->
+    <div class="perk-image-container">
+        @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+        {
+            <img src="@Model.ImagenUrl" alt="@Model.Nombre" class="perk-card-img" />
+        }
+        else
+        {
+            <i class="fas fa-star" style="color: #ffd700; font-size: 3rem;"></i>
+        }
+    </div>
+
+    <!-- Nombre y descripción -->
+    <h5 class="perk-card-name">@Model.Nombre</h5>
+    <p class="perk-card-desc">@(Model.Descripcion ?? "Sin descripción.")</p>
+
+    <!-- Personaje asociado -->
+    @if (Model.Killer != null)
+    {
+        <div class="character-info">
+            <img src="@(Model.Killer.ImagenUrl ?? "/images/placeholder-killer.png")" 
+                 alt="@Model.Killer.Nombre" class="character-thumb" />
+            <span>@Model.Killer.Nombre</span>
+        </div>
+    }
+    else if (Model.Survivor != null)
+    {
+        <div class="character-info">
+            <img src="@(Model.Survivor.ImagenUrl ?? "/images/placeholder-survivor.png")" 
+                 alt="@Model.Survivor.Nombre" class="character-thumb" />
+            <span>@Model.Survivor.Nombre</span>
+        </div>
+    }
+    else
+    {
+        <div class="character-info text-muted">Sin personaje</div>
+    }
+
+    <!-- Acciones -->
+    <div class="perk-actions">
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-sm btn-info"><i class="fas fa-eye"></i></a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
+    </div>
+</div>

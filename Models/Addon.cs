@@ -19,6 +19,9 @@ namespace DBDHub.Models
         public int KillerId { get; set; }
         public Killer? Killer { get; set; }
 
+        [StringLength(500)]
+        public string? ImagenUrl { get; set; }
+
         public bool Activo { get; set; } = true;
         public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
     }

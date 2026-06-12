@@ -1,230 +1,159 @@
-# ► DBD Hub - Wiki Interactiva de Dead by Daylight
+# DBD Hub
 
-> Una plataforma centralizada para consultar información actualizada de asesinos, supervivientes, perks y mapas de Dead by Daylight.
+> Wiki interactiva y panel de gestion para Dead by Daylight, construida con ASP.NET Core MVC, Entity Framework Core y PostgreSQL.
 
 ![.NET](https://img.shields.io/badge/.NET-10.0-blueviolet?style=flat-square)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-green?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-MVC-blue?style=flat-square)
+![Entity Framework Core](https://img.shields.io/badge/EF_Core-Code_First-7f52ff?style=flat-square)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-316192?style=flat-square)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=flat-square)
+![Identity](https://img.shields.io/badge/Identity-Auth-orange?style=flat-square)
 
 ---
 
-## ◆ Problema & Solución
+## Overview
 
-### ► Problema
-La información de Dead by Daylight (asesinos, supervivientes, perks, addons, mapas) está dispersa en múltiples fuentes. Los jugadores necesitan un sitio centralizado para tomar decisiones informadas.
+DBD Hub centraliza informacion de personajes, perks, addons, mapas, partidas y reportes en una sola aplicacion web.
 
-### ► Solución
-**DBD Hub** ofrece:
-- ◆ Catálogo completo y actualizado
-- ◆ Información centralizada y de fácil acceso
-- ◆ Herramientas para jugadores y creadores de contenido
+El objetivo del proyecto es ofrecer una experiencia clara, ordenada y responsive para consultar y administrar el contenido del universo de Dead by Daylight.
 
 ---
 
-## ► Usuarios Objetivo
+## Highlights
 
-- ◆ Jugadores de Dead by Daylight de todos los niveles
-- ◆ Creadores de contenido (streamers, YouTubers)
-- ◆ Analistas del meta que monitorean tendencias
+- Gestion completa de killers, survivors, perks, addons y maps
+- Modulo de matches para registrar y consultar partidas
+- Reportes y vistas de resumen para analisis rapido
+- Autenticacion con login y registro de usuarios
+- Arquitectura MVC con capas separadas por responsabilidad
+- Persistencia con Entity Framework Core y PostgreSQL
 
 ---
 
-## ◇ Características Principales
+## Tech Stack
 
-| Característica | Descripción |
+| Tecnologia | Uso |
 |---|---|
-| ► Catálogo de Asesinos | Listado completo con perks únicos y habilidades |
-| ► Catálogo de Supervivientes | Información detallada de cada superviviente |
-| ► Catálogo de Mapas | Mapas originales y variantes asociadas |
-| ► Gestión de Perks | Base de datos de perks exclusivos |
-| ► Gestión de Addons | Addons clasificados por rareza |
-| ► Relaciones Muchos-a-Muchos | Mapas vinculados a asesinos correspondientes |
+| ASP.NET Core 10 | Framework web MVC |
+| Entity Framework Core | ORM Code First |
+| PostgreSQL | Base de datos relacional |
+| Npgsql | Provider para PostgreSQL |
+| ASP.NET Core Identity | Autenticacion y autorizacion |
+| Bootstrap 5 | Interfaz responsiva |
 
 ---
 
-## ◇ Stack Tecnológico
+## Main Modules
 
-| Tecnología | Propósito |
+| Modulo | Descripcion |
 |---|---|
-| **ASP.NET Core 10.0** | Framework web MVC |
-| **Entity Framework Core** | ORM (Code First) |
-| **PostgreSQL** | Base de datos relacional |
-| **Npgsql** | Proveedor EF Core para PostgreSQL |
-| **Bootstrap 5** | UI/Frontend responsivo |
-| **Visual Studio Code** | Editor de desarrollo |
+| Killers | Gestion de asesinos, detalles y relacion con perks/addons |
+| Survivors | Administracion de supervivientes y sus perks |
+| Perks | Registro y visualizacion de habilidades |
+| Addons | Catalogo de complementos asociados a killers |
+| Maps | Mapa principal y variantes |
+| Matches | Registro y consulta de partidas |
+| Reports | Resumenes y metricas del sistema |
+| Account | Login y registro de usuarios |
 
 ---
 
-## ◆ Estructura del Proyecto
+## Project Structure
 
-```
+```text
 DBDHub/
-├── Controllers/              # ► Controladores MVC
-│   ├── HomeController.cs
-│   ├── KillersController.cs
-│   └── SurvivorsController.cs
-├── Data/                     # ► Contexto de base de datos
-│   └── AppDbContext.cs
-├── Migrations/               # ► Migraciones EF Core
-├── Models/                   # ► Entidades del dominio
-│   ├── Killer.cs
-│   ├── Survivor.cs
-│   ├── Perk.cs
-│   ├── Addon.cs
-│   ├── Map.cs
-│   └── MapKiller.cs
-├── ViewModels/               # ► ViewModels
-├── Views/                    # ► Vistas Razor
-│   ├── Home/
-│   ├── Killers/
-│   ├── Survivors/
-│   └── Shared/
-├── Services/                 # ► Lógica de negocio
-├── wwwroot/                  # ► Archivos estáticos (CSS, JS)
-├── Program.cs                # ► Punto de entrada
-├── appsettings.json          # ► Config (NO SUBIR)
-├── appsettings.example.json  # ► Plantilla
-└── DBDHub.csproj            # ► Configuración del proyecto
+|-- Controllers/             Controladores MVC
+|-- Data/                    Contexto de base de datos
+|-- Migrations/              Migraciones de EF Core
+|-- Models/                  Entidades del dominio
+|-- Services/                Logica de negocio
+|-- ViewModels/              Modelos para vistas
+|-- Views/                   Vistas Razor
+|-- wwwroot/                 Archivos estaticos
+|-- Program.cs               Punto de entrada
+|-- appsettings.json         Configuracion local
+|-- appsettings.example.json Plantilla de configuracion
+|-- DBDHub.csproj            Configuracion del proyecto
 ```
 
 ---
 
-## ◆ Cómo Empezar
+## Local Setup
 
-### ► Requisitos Previos
-- **.NET 10.0 SDK** o superior
-- **PostgreSQL 12+** instalado y en ejecución
-- **Visual Studio Code** (recomendado)
+### Prerequisites
 
-### ► Instalación
+- .NET 10 SDK
+- PostgreSQL 12 o superior
+- Visual Studio, Visual Studio Code o cualquier editor compatible
 
-1. **Clonar el repositorio**
+### Run locally
+
+1. Clonar el repositorio
+
 ```bash
-git clone https://github.com/tu-usuario/DBDHub.git
+git clone https://github.com/EMLarco/DBDHub.git
 cd DBDHub
 ```
 
-2. **Restaurar dependencias**
+2. Restaurar dependencias
+
 ```bash
 dotnet restore
 ```
 
-3. **Configurar la base de datos**
-   - Copiar `appsettings.example.json` a `appsettings.json`
-   - Actualizar las credenciales de PostgreSQL en `appsettings.json`
+3. Configurar la cadena de conexion
 
 ```bash
 cp appsettings.example.json appsettings.json
 ```
 
-4. **Ejecutar migraciones**
+Edita `appsettings.json` y coloca tus credenciales de PostgreSQL.
+
+4. Aplicar migraciones
+
 ```bash
 dotnet ef database update
 ```
 
-5. **Ejecutar la aplicación**
+5. Ejecutar la aplicacion
+
 ```bash
 dotnet run
 ```
 
-La aplicación estará disponible en `https://localhost:5001` (o el puerto configurado)
+La aplicacion quedara disponible en la direccion local que muestre la consola, normalmente `https://localhost:5001`.
 
 ---
 
-### ► Pasos locales:
-1. Copia el archivo `.example` a su forma real
-2. Llena con tus credenciales locales
-3. Git ignorará automáticamente los cambios
+## Configuration Example
 
----
+`appsettings.example.json`
 
-## ◆ Estructura de la Base de Datos
-
-Se diseñaron **6 tablas principales** más una tabla de unión para relacionar entidades.
-
-### ► Diagrama de Relaciones
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=DBDHubDB;Username=your_username;Password=your_password"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}
 ```
-Killer (1) ──< Perk (N)
-Killer (1) ──< Addon (N)
-Survivor (1) ──< Perk (N)
-Map (1) ──< Map (N) [auto-referencia para variantes]
-Map (N) ── MapKiller ── Killer (N)
-```
-
-### ► Detalle de Tablas
-
-**Killer**
-| Campo | Tipo | Descripción |
-|---|---|---|
-| Id | int (PK) | Identificador único |
-| Nombre | string(100) | Nombre del asesino |
-| Poder | string(200) | Nombre del poder especial |
-| Velocidad | decimal | Velocidad base de movimiento |
-| Dificultad | string(50) | Fácil, Moderado, Muy Difícil |
-| Historia | text | Trasfondo del personaje |
-| Activo | bool | Eliminación lógica |
-| FechaCreacion | DateTime | Fecha de registro |
-
-**Survivor**
-| Campo | Tipo | Descripción |
-|---|---|---|
-| Id | int (PK) | Identificador único |
-| Nombre | string(100) | Nombre del superviviente |
-| Historia | text | Trasfondo del personaje |
-| Dificultad | string(50) | Fácil, Moderado, Difícil |
-| Activo | bool | Eliminación lógica |
-| FechaCreacion | DateTime | Fecha de registro |
-
-**Perk**
-| Campo | Tipo | Descripción |
-|---|---|---|
-| Id | int (PK) | Identificador único |
-| Nombre | string(100) | Nombre de la habilidad |
-| Descripcion | text | Descripción completa |
-| Nivel | int | 1, 2 o 3 |
-| TipoPersonaje | string(20) | "Killer" o "Survivor" |
-| KillerId | int? (FK) | Referencia a Killer |
-| SurvivorId | int? (FK) | Referencia a Survivor |
-| Activo | bool | Eliminación lógica |
-| FechaCreacion | DateTime | Fecha de registro |
-
-**Addon**
-| Campo | Tipo | Descripción |
-|---|---|---|
-| Id | int (PK) | Identificador único |
-| Nombre | string(100) | Nombre del addon |
-| Rareza | string(50) | Común, Poco Común, Raro, Muy Raro, Ultra Raro |
-| Descripcion | text | Efecto del addon |
-| KillerId | int (FK) | Referencia a Killer |
-| Activo | bool | Eliminación lógica |
-| FechaCreacion | DateTime | Fecha de registro |
-
-**Map**
-| Campo | Tipo | Descripción |
-|---|---|---|
-| Id | int (PK) | Identificador único |
-| Nombre | string(100) | Nombre del mapa |
-| ImagenUrl | string(200) | URL de la imagen |
-| Tipo | string(50) | "Original" o "Variante" |
-| OriginalMapId | int? (FK) | Referencia al mapa original |
-| Activo | bool | Eliminación lógica |
-| FechaCreacion | DateTime | Fecha de registro |
-
-**MapKiller** (tabla de unión)
-| Campo | Tipo | Descripción |
-|---|---|---|
-| Id | int (PK) | Identificador único |
-| MapId | int (FK) | Referencia a Map |
-| KillerId | int (FK) | Referencia a Killer |
-| Activo | bool | Eliminación lógica |
-| FechaCreacion | DateTime | Fecha de registro |
 
 ---
 
-## ◆ Licencia
+## Notes
 
-Este proyecto está bajo la licencia MIT. Ver `LICENSE` para más detalles.
+- No subas `appsettings.json` con credenciales reales.
+- Si cambias el nombre de la base o el usuario, actualiza la cadena de conexion.
+- El proyecto usa Identity para autenticar usuarios.
 
 ---
 
-**Proyecto realizado para la materia de Desarrollo para Integración de Tecnologías Web**
+## Proyecto academico
+
+Proyecto desarrollado para la materia de Desarrollo para Integracion de Tecnologias Web.

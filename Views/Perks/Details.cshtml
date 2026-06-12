@@ -1,0 +1,32 @@
+@model DBDHub.Models.Perk
+@{
+    ViewData["Title"] = "Detalle de Perk";
+}
+
+<div class="container mt-4">
+    <h1><i class="fas fa-info-circle me-2"></i>@Model.Nombre</h1>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">Descripción</dt>
+        <dd class="col-sm-9">@Model.Descripcion</dd>
+        <dt class="col-sm-3">Nivel</dt>
+        <dd class="col-sm-9">@Model.Nivel</dd>
+        <dt class="col-sm-3">Tipo</dt>
+        <dd class="col-sm-9">@Model.TipoPersonaje</dd>
+        <dt class="col-sm-3">Personaje</dt>
+        <dd class="col-sm-9">@(Model.Killer?.Nombre ?? Model.Survivor?.Nombre ?? "Sin asignar")</dd>
+        <dt class="col-sm-3">Imagen</dt>
+        <dd class="col-sm-9">
+            @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+            {
+                <img src="@Model.ImagenUrl" alt="@Model.Nombre" style="max-height: 100px;" />
+            }
+            else
+            {
+                <span>No disponible</span>
+            }
+        </dd>
+    </dl>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning"><i class="fas fa-edit"></i> Editar</a>
+    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+</div>
