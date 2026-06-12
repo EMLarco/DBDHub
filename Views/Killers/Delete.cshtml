@@ -1,0 +1,24 @@
+@model DBDHub.Models.Killer
+@{
+    ViewData["Title"] = "Eliminar Asesino";
+}
+
+<h1>¿Eliminar asesino?</h1>
+<div class="alert alert-warning">
+    <p>Estás a punto de desactivar al siguiente asesino. No se eliminará físicamente de la base de datos, pero ya no aparecerá en los listados.</p>
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Nombre</dt>
+    <dd class="col-sm-9">@Model.Nombre</dd>
+    <dt class="col-sm-3">Poder</dt>
+    <dd class="col-sm-9">@(Model.Poder ?? "-")</dd>
+    <dt class="col-sm-3">Dificultad</dt>
+    <dd class="col-sm-9">@(Model.Dificultad ?? "-")</dd>
+</dl>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Confirmar eliminación lógica</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

@@ -1,0 +1,72 @@
+@model DBDHub.Models.Killer
+@{
+    ViewData["Title"] = "Detalle del Asesino";
+}
+
+<h1>@Model.Nombre</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-sm-4">Poder</dt>
+            <dd class="col-sm-8">@(Model.Poder ?? "-")</dd>
+            <dt class="col-sm-4">Velocidad</dt>
+            <dd class="col-sm-8">@Model.Velocidad</dd>
+            <dt class="col-sm-4">Dificultad</dt>
+            <dd class="col-sm-8">@(Model.Dificultad ?? "-")</dd>
+            <dt class="col-sm-4">Historia</dt>
+            <dd class="col-sm-8">@(Model.Historia ?? "-")</dd>
+        </dl>
+    </div>
+</div>
+
+@if (Model.Perks?.Any() == true)
+{
+    <h3>Perks</h3>
+    <table class="table table-sm">
+        <thead><tr><th>Nombre</th><th>Descripción</th><th>Nivel</th></tr></thead>
+        <tbody>
+        @foreach (var perk in Model.Perks)
+        {
+            <tr>
+                <td>@perk.Nombre</td>
+                <td>@(perk.Descripcion ?? "-")</td>
+                <td>@perk.Nivel</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@if (Model.Addons?.Any() == true)
+{
+    <h3>Addons</h3>
+    <table class="table table-sm">
+        <thead><tr><th>Nombre</th><th>Rareza</th><th>Descripción</th></tr></thead>
+        <tbody>
+        @foreach (var addon in Model.Addons)
+        {
+            <tr>
+                <td>@addon.Nombre</td>
+                <td>@(addon.Rareza ?? "-")</td>
+                <td>@(addon.Descripcion ?? "-")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@if (Model.MapKillers?.Any() == true)
+{
+    <h3>Mapas asociados</h3>
+    <ul>
+    @foreach (var mk in Model.MapKillers)
+    {
+        <li>@mk.Map?.Nombre (@mk.Map?.Tipo)</li>
+    }
+    </ul>
+}
+
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
+<a asp-action="Index" class="btn btn-secondary">Volver</a>

@@ -1,0 +1,85 @@
+# Archivos de configuración sensibles (nunca subir credenciales)
+appsettings.json
+appsettings.Development.json
+*.secrets.json
+
+# Artifacts de compilación
+bin/
+obj/
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Visual Studio
+.vs/
+*.user
+*.sln.docstates
+*.sln.iml
+
+# IntelliJ / Rider
+.idea/
+.gradle/
+.idea_modules/
+*.iml
+*.iws
+*.ipr
+
+# Rider specific
+.idea/shelf
+.idea/inspectionProfiles
+.idea/.name
+.idea/artifacts
+.idea/misc.xml
+.idea/modules.xml
+.idea/projectConfigurations.json
+.idea/vcs.xml
+
+# Nuget specific
+*.nupkg
+*.snupkg
+NuGetDefaults.props
+.nuget/
+
+# Entity Framework
+*.db
+*.db-shm
+*.db-wal
+migrations/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+*~
+
+# IDE
+*.swp
+*.swo
+*~
+.vscode/settings.json
+.vscode/extensions.json
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# IDE files
+*.suo
+*.sln.DotSettings.user
+
+# Test results
+TestResults/

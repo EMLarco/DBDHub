@@ -1,0 +1,28 @@
+@model DBDHub.Models.Survivor
+@{
+    ViewData["Title"] = "Editar Superviviente";
+}
+
+<h1>Editar - @Model.Nombre</h1>
+<hr />
+<form asp-action="Edit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+    <div class="mb-3">
+        <label asp-for="Nombre" class="form-label"></label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Historia" class="form-label"></label>
+        <textarea asp-for="Historia" class="form-control" rows="8"></textarea>
+        <span asp-validation-for="Historia" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Dificultad" class="form-label"></label>
+        <input asp-for="Dificultad" class="form-control" />
+        <span asp-validation-for="Dificultad" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

@@ -1,0 +1,20 @@
+@model DBDHub.Models.Survivor
+@{
+    ViewData["Title"] = "Eliminar Superviviente";
+}
+
+<h1>¿Desactivar superviviente?</h1>
+<div class="alert alert-warning">No se borrará físicamente, solo se ocultará de los listados.</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Nombre</dt>
+    <dd class="col-sm-9">@Model.Nombre</dd>
+    <dt class="col-sm-3">Dificultad</dt>
+    <dd class="col-sm-9">@(Model.Dificultad ?? "-")</dd>
+</dl>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Confirmar eliminación lógica</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
