@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: dbdhub
+resources:
+  - namespace.yaml
+  - secret.yaml
+  - configmap.yaml
+  - postgres.yaml
+  - redis.yaml
+  - db-init-job.yaml
+  - app.yaml
+  - ingress.yaml
+  - hpa.yaml
+images:
+  - name: dbdhub-app
+    newName: dbdhub-app
+    newTag: local

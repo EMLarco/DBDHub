@@ -19,6 +19,9 @@ namespace DBDHub.Controllers
         // GET: Perks
         public async Task<IActionResult> Index(string buscar, string tipo, int pagina = 1, int tamano = 18)
         {
+            pagina = Math.Max(1, pagina);
+            tamano = Math.Clamp(tamano, 1, 100);
+
             var query = _context.Perks
                 .Include(p => p.Killer)
                 .Include(p => p.Survivor)
@@ -102,9 +105,9 @@ namespace DBDHub.Controllers
         // POST: Perks/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,Nivel,TipoPersonaje,KillerId,SurvivorId,Activo,ImagenUrl")] Perk perk)
+        public async Task<IActionResult> Edit(int id, [Bind("Nombre,Descripcion,Nivel,TipoPersonaje,KillerId,SurvivorId,Activo,ImagenUrl")] Perk perk)
         {
-            if (id != perk.Id) return NotFound();
+            perk.Id = id;
 
             if (ModelState.IsValid)
             {

@@ -1,9 +1,9 @@
 @model IEnumerable<DBDHub.Models.Map>
 @{
     ViewData["Title"] = "Mapas";
-    int pagina = (int)ViewData["pagina"];
-    int tamano = (int)ViewData["tamano"];
-    int total = (int)ViewData["total"];
+    int pagina = ViewData["pagina"] as int? ?? 1;
+    int tamano = ViewData["tamano"] as int? ?? 18;
+    int total = ViewData["total"] as int? ?? 0;
     string buscar = ViewData["buscar"]?.ToString() ?? "";
     string tipo = ViewData["tipo"]?.ToString() ?? "";
     int totalPaginas = (int)Math.Ceiling((double)total / tamano);
@@ -15,8 +15,10 @@
     <div class="d-flex justify-content-between mb-3">
         <a asp-action="Create" class="btn btn-success"><i class="fas fa-plus"></i> Nuevo Mapa</a>
         <form asp-action="Index" method="get" class="d-flex">
-            <input name="buscar" class="form-control me-2" placeholder="Buscar..." value="@buscar" />
-            <select name="tipo" class="form-control me-2" style="width:auto">
+            <label for="buscarMap" class="visually-hidden">Buscar mapas</label>
+            <input id="buscarMap" name="buscar" class="form-control me-2" placeholder="Buscar..." value="@buscar" />
+            <label for="tipoMap" class="visually-hidden">Filtrar por tipo de mapa</label>
+            <select id="tipoMap" name="tipo" class="form-control me-2" style="width:auto">
                 <option value="">Todos</option>
                 <option value="Original" selected="@(tipo=="Original")">Original</option>
                 <option value="Variante" selected="@(tipo=="Variante")">Variante</option>

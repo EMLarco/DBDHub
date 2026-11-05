@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DBDHub.Models
 {
     public class Perk
     {
+        [BindNever]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "El nombre de la perk es obligatorio")]

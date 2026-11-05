@@ -1,9 +1,9 @@
 @model IEnumerable<DBDHub.Models.Survivor>
 @{
     ViewData["Title"] = "Supervivientes";
-    int pagina = (int)ViewData["pagina"];
-    int tamano = (int)ViewData["tamano"];
-    int totalRegistros = (int)ViewData["totalRegistros"];
+    int pagina = ViewData["pagina"] as int? ?? 1;
+    int tamano = ViewData["tamano"] as int? ?? 18;
+    int totalRegistros = ViewData["totalRegistros"] as int? ?? 0;
     string buscar = ViewData["buscar"]?.ToString() ?? "";
     int totalPaginas = (int)Math.Ceiling((double)totalRegistros / tamano);
 }
@@ -18,7 +18,8 @@
             <i class="fas fa-plus-circle"></i> Nuevo superviviente
         </a>
         <form asp-action="Index" method="get" class="d-flex">
-            <input type="text" name="buscar" class="form-control me-2" placeholder="Buscar..." value="@buscar" />
+            <label for="buscarSurvivor" class="visually-hidden">Buscar supervivientes</label>
+            <input id="buscarSurvivor" type="text" name="buscar" class="form-control me-2" placeholder="Buscar..." value="@buscar" />
             <button type="submit" class="btn btn-primary me-1"><i class="fas fa-search"></i></button>
             <a asp-action="Index" class="btn btn-secondary"><i class="fas fa-times"></i></a>
         </form>

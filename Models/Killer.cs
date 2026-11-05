@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DBDHub.Models
 {
     public class Killer
     {
+        [BindNever]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "El nombre es obligatorio")]
@@ -27,8 +29,8 @@ namespace DBDHub.Models
         public bool Activo { get; set; } = true;
         public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
 
-        public ICollection<Perk>? Perks { get; set; }
-        public ICollection<Addon>? Addons { get; set; }
-        public ICollection<MapKiller>? MapKillers { get; set; }
+        public ICollection<Perk> Perks { get; set; } = new List<Perk>();
+        public ICollection<Addon> Addons { get; set; } = new List<Addon>();
+        public ICollection<MapKiller> MapKillers { get; set; } = new List<MapKiller>();
     }
 }

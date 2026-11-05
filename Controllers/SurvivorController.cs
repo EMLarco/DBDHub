@@ -17,8 +17,11 @@ namespace DBDHub.Controllers
         // GET: Survivors (con paginación, búsqueda y carga de Perks)
         public async Task<IActionResult> Index(string buscar, int pagina = 1, int tamano = 18)
         {
+            pagina = Math.Max(1, pagina);
+            tamano = Math.Clamp(tamano, 1, 100);
+
             var query = _context.Survivors
-                .Include(s => s.Perks!.Where(p => p.Activo))   // para las tarjetas
+                .Include(s => s.Perks.Where(p => p.Activo))   // para las tarjetas
                 .Where(s => s.Activo == true);
 
             if (!string.IsNullOrEmpty(buscar))
@@ -46,7 +49,7 @@ namespace DBDHub.Controllers
             if (id == null) return NotFound();
 
             var survivor = await _context.Survivors
-                .Include(s => s.Perks!.Where(p => p.Activo))
+                .Include(s => s.Perks.Where(p => p.Activo))
                 .FirstOrDefaultAsync(m => m.Id == id && m.Activo == true);
 
             if (survivor == null) return NotFound();
@@ -87,9 +90,9 @@ namespace DBDHub.Controllers
         // POST: Survivors/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Historia,Dificultad,Activo,ImagenUrl")] Survivor survivor)
+        public async Task<IActionResult> Edit(int id, [Bind("Nombre,Historia,Dificultad,Activo,ImagenUrl")] Survivor survivor)
         {
-            if (id != survivor.Id) return NotFound();
+            survivor.Id = id;
 
             if (ModelState.IsValid)
             {

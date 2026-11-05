@@ -17,14 +17,16 @@ namespace DBDHub.Controllers
         // GET: Killers (con paginación, búsqueda y carga de Perks)
         public async Task<IActionResult> Index(string buscar, int pagina = 1, int tamano = 18)
         {
+            pagina = Math.Max(1, pagina);
+            tamano = Math.Clamp(tamano, 1, 100);
+
             var query = _context.Killers
-                .Include(k => k.Perks!.Where(p => p.Activo))
+                .Include(k => k.Perks.Where(p => p.Activo))
                 .Where(k => k.Activo == true);
 
-                        if (!string.IsNullOrEmpty(buscar))
+            if (!string.IsNullOrEmpty(buscar))
             {
-                var buscarLower = buscar.ToLower();
-                query = query.Where(k => k.Nombre.ToLower().Contains(buscarLower));
+                query = query.Where(k => EF.Functions.ILike(k.Nombre, $"%{buscar}%"));
             }
 
             int totalRegistros = await query.CountAsync();
@@ -49,9 +51,9 @@ namespace DBDHub.Controllers
             if (id == null) return NotFound();
 
             var killer = await _context.Killers
-                .Include(k => k.Perks!.Where(p => p.Activo))
-                .Include(k => k.Addons!.Where(a => a.Activo))
-                .Include(k => k.MapKillers!)
+                .Include(k => k.Perks.Where(p => p.Activo))
+                .Include(k => k.Addons.Where(a => a.Activo))
+                .Include(k => k.MapKillers)
                     .ThenInclude(mk => mk.Map)
                 .FirstOrDefaultAsync(m => m.Id == id && m.Activo == true);
 
@@ -95,9 +97,9 @@ namespace DBDHub.Controllers
         // POST: Killers/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Poder,Velocidad,Dificultad,Historia,Activo,ImagenUrl")] Killer killer)
+        public async Task<IActionResult> Edit(int id, [Bind("Nombre,Poder,Velocidad,Dificultad,Historia,Activo,ImagenUrl")] Killer killer)
         {
-            if (id != killer.Id) return NotFound();
+            killer.Id = id;
 
             if (ModelState.IsValid)
             {

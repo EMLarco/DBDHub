@@ -1,0 +1,33 @@
+=== Antes de eliminar una réplica ===
+NAME                          READY   STATUS    RESTARTS   AGE   IP           NODE             NOMINATED NODE   READINESS GATES
+dbdhub-app-66b457769f-62kvx   1/1     Running   0          57m   10.1.0.218   docker-desktop   <none>           <none>
+dbdhub-app-66b457769f-nhdb5   1/1     Running   0          57m   10.1.0.217   docker-desktop   <none>           <none>
+dbdhub-app-66b457769f-srvjz   1/1     Running   0          57m   10.1.0.216   docker-desktop   <none>           <none>
+=== Readiness antes ===
+HTTP 200 0.067250s
+
+=== Eliminando dbdhub-app-66b457769f-62kvx ===
+pod "dbdhub-app-66b457769f-62kvx" deleted from dbdhub namespace
+probe 1 HTTP 200 0.022470s
+probe 2 HTTP 200 0.011703s
+probe 3 HTTP 200 0.009397s
+probe 4 HTTP 200 0.007574s
+probe 5 HTTP 200 0.007098s
+probe 6 HTTP 200 0.008236s
+probe 7 HTTP 200 0.007439s
+probe 8 HTTP 200 0.007740s
+probe 9 HTTP 200 0.007854s
+probe 10 HTTP 200 0.008568s
+probe 11 HTTP 200 0.009936s
+probe 12 HTTP 200 0.007423s
+pod/dbdhub-app-66b457769f-g6ccj condition met
+pod/dbdhub-app-66b457769f-nhdb5 condition met
+pod/dbdhub-app-66b457769f-srvjz condition met
+=== Réplicas tras recuperación ===
+NAME                          READY   STATUS    RESTARTS   AGE   IP           NODE             NOMINATED NODE   READINESS GATES
+dbdhub-app-66b457769f-g6ccj   1/1     Running   0          14s   10.1.0.233   docker-desktop   <none>           <none>
+dbdhub-app-66b457769f-nhdb5   1/1     Running   0          57m   10.1.0.217   docker-desktop   <none>           <none>
+dbdhub-app-66b457769f-srvjz   1/1     Running   0          58m   10.1.0.216   docker-desktop   <none>           <none>
+=== Deployment ===
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+dbdhub-app   3/3     3            3           66m

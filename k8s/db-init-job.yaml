@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dbdhub-db-init
+  namespace: dbdhub
+  labels:
+    app: dbdhub-db-init
+spec:
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels:
+        app: dbdhub-db-init
+    spec:
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: db-init
+          image: dbdhub-app:latest
+          imagePullPolicy: IfNotPresent
+          args: ["--migrate", "--seed"]
+          envFrom:
+            - configMapRef:
+                name: dbdhub-config
+            - secretRef:
+                name: dbdhub-secrets
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]

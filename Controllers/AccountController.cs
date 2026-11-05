@@ -55,7 +55,7 @@ namespace DBDHub.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe ?? false, lockoutOnFailure: false);
                 if (result.Succeeded)
                     return RedirectToAction("Index", "Killers");
                 ModelState.AddModelError("", "Usuario o contraseña incorrectos.");

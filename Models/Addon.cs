@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DBDHub.Models
 {
     public class Addon
     {
+        [BindNever]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "El nombre del addon es obligatorio")]
@@ -16,6 +18,7 @@ namespace DBDHub.Models
         public string? Descripcion { get; set; }
 
         [Required(ErrorMessage = "El killer es obligatorio")]
+        [Range(1, int.MaxValue, ErrorMessage = "Selecciona un killer válido")]
         public int KillerId { get; set; }
         public Killer? Killer { get; set; }
 

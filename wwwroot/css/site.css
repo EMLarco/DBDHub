@@ -1102,3 +1102,49 @@ h1 {
 .modal-content.bg-dark {
     background-color: #1a1a1a;
 }
+
+/* Panel de eventos en tiempo real */
+.live-panel {
+    box-shadow: 0 0 18px rgba(139, 0, 0, 0.35);
+}
+
+.live-feed {
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+.live-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid #2b2b2b;
+    font-size: 0.9rem;
+}
+
+.live-item:last-child {
+    border-bottom: none;
+}
+
+.live-time {
+    color: #8a8a8a;
+    font-variant-numeric: tabular-nums;
+    min-width: 68px;
+}
+
+.live-type {
+    font-family: 'Roboto Condensed', sans-serif;
+    letter-spacing: 0.5px;
+}
+
+.live-message {
+    color: #e8e8e8;
+    flex: 1 1 220px;
+}
+
+.live-server {
+    color: #00e5ff;
+    font-size: 0.8rem;
+    font-family: 'Roboto Condensed', sans-serif;
+}

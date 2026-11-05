@@ -18,8 +18,11 @@ namespace DBDHub.Controllers
         // GET: Maps
         public async Task<IActionResult> Index(string buscar, string tipo, int pagina = 1, int tamano = 18)
         {
+            pagina = Math.Max(1, pagina);
+            tamano = Math.Clamp(tamano, 1, 100);
+
             var query = _context.Maps
-                .Include(m => m.MapKillers!).ThenInclude(mk => mk.Killer)
+                .Include(m => m.MapKillers).ThenInclude(mk => mk.Killer)
                 .Where(m => m.Activo == true);
 
             if (!string.IsNullOrEmpty(buscar))
@@ -46,8 +49,8 @@ namespace DBDHub.Controllers
         {
             if (id == null) return NotFound();
             var map = await _context.Maps
-                .Include(m => m.MapKillers!).ThenInclude(mk => mk.Killer)
-                .Include(m => m.Variantes!)
+                .Include(m => m.MapKillers).ThenInclude(mk => mk.Killer)
+                .Include(m => m.Variantes)
                 .FirstOrDefaultAsync(m => m.Id == id && m.Activo);
             if (map == null) return NotFound();
             return View(map);
@@ -90,9 +93,10 @@ namespace DBDHub.Controllers
         // POST: Maps/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,ImagenUrl,Tipo,OriginalMapId,Activo")] Map map)
+        public async Task<IActionResult> Edit(int id, [Bind("Nombre,ImagenUrl,Tipo,OriginalMapId,Activo")] Map map)
         {
-            if (id != map.Id) return NotFound();
+            map.Id = id;
+
             if (ModelState.IsValid)
             {
                 try

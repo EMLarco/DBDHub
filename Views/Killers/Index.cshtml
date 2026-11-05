@@ -1,9 +1,9 @@
 @model IEnumerable<DBDHub.Models.Killer>
 @{
     ViewData["Title"] = "Asesinos";
-    int pagina = (int)ViewData["pagina"];
-    int tamano = (int)ViewData["tamano"];
-    int totalRegistros = (int)ViewData["totalRegistros"];
+    int pagina = ViewData["pagina"] as int? ?? 1;
+    int tamano = ViewData["tamano"] as int? ?? 18;
+    int totalRegistros = ViewData["totalRegistros"] as int? ?? 0;
     string buscar = ViewData["buscar"]?.ToString() ?? "";
     int totalPaginas = (int)Math.Ceiling((double)totalRegistros / tamano);
 }
@@ -18,7 +18,8 @@
             <i class="fas fa-plus-circle"></i> Nuevo asesino
         </a>
         <form asp-action="Index" method="get" class="d-flex">
-            <input type="text" name="buscar" class="form-control me-2" placeholder="Buscar asesino..." value="@buscar" />
+            <label for="buscarKiller" class="visually-hidden">Buscar asesinos</label>
+            <input id="buscarKiller" type="text" name="buscar" class="form-control me-2" placeholder="Buscar asesino..." value="@buscar" />
             <button type="submit" class="btn btn-primary me-1">
                 <i class="fas fa-search"></i>
             </button>
@@ -77,33 +78,5 @@
 </div>
 
 @section Scripts {
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const tiers = ['purple-tier', 'green-tier', 'yellow-tier'];
-            let currentTierIndex = 0; // empezamos todos en púrpura
-
-            // Seleccionamos todos los diamantes
-            const allPerks = document.querySelectorAll('.dbd-perk-background');
-
-            // Función para aplicar la clase actual a todos
-            function applyTierToAll() {
-                const currentClass = tiers[currentTierIndex];
-                allPerks.forEach(bg => {
-                    // Removemos cualquier tier anterior
-                    bg.classList.remove('purple-tier', 'green-tier', 'yellow-tier');
-                    // Añadimos la nueva
-                    bg.classList.add(currentClass);
-                });
-            }
-
-            // Aplicar la inicial (púrpura)
-            applyTierToAll();
-
-            // Cambiar todos juntos cada 1 segundo
-            setInterval(() => {
-                currentTierIndex = (currentTierIndex + 1) % tiers.length;
-                applyTierToAll();
-            }, 1000);
-        });
-    </script>
+    <script src="~/js/killers-index.js" asp-append-version="true"></script>
 }

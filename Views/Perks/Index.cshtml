@@ -1,9 +1,9 @@
 @model IEnumerable<DBDHub.Models.Perk>
 @{
     ViewData["Title"] = "Perks";
-    int pagina = (int)ViewData["pagina"];
-    int tamano = (int)ViewData["tamano"];
-    int totalRegistros = (int)ViewData["totalRegistros"];
+    int pagina = ViewData["pagina"] as int? ?? 1;
+    int tamano = ViewData["tamano"] as int? ?? 18;
+    int totalRegistros = ViewData["totalRegistros"] as int? ?? 0;
     string buscar = ViewData["buscar"]?.ToString() ?? "";
     string tipo = ViewData["tipo"]?.ToString() ?? "";
     int totalPaginas = (int)Math.Ceiling((double)totalRegistros / tamano);
@@ -17,8 +17,10 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <a asp-action="Create" class="btn btn-success"><i class="fas fa-plus-circle"></i> Nueva Perk</a>
         <form asp-action="Index" method="get" class="d-flex">
-            <input type="text" name="buscar" class="form-control me-2" placeholder="Buscar..." value="@buscar" />
-            <select name="tipo" class="form-control me-2" style="width:auto;">
+            <label for="buscarPerk" class="visually-hidden">Buscar perks</label>
+            <input id="buscarPerk" type="text" name="buscar" class="form-control me-2" placeholder="Buscar..." value="@buscar" />
+            <label for="tipoPerk" class="visually-hidden">Filtrar por tipo de perk</label>
+            <select id="tipoPerk" name="tipo" class="form-control me-2" style="width:auto;">
                 <option value="">Todos</option>
                 <option value="Killer" selected="@(tipo == "Killer" ? "selected" : null)">Killer</option>
                 <option value="Survivor" selected="@(tipo == "Survivor" ? "selected" : null)">Survivor</option>

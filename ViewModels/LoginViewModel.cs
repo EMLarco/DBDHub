@@ -14,6 +14,6 @@ namespace DBDHub.ViewModels
         public string Password { get; set; } = string.Empty;
 
         [Display(Name = "Recordarme")]
-        public bool RememberMe { get; set; }
+        public bool? RememberMe { get; set; }
     }
 }

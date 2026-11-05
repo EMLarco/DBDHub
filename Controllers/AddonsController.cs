@@ -18,6 +18,9 @@ namespace DBDHub.Controllers
         // GET: Addons
         public async Task<IActionResult> Index(string buscar, int? killerId, int pagina = 1, int tamano = 18)
         {
+            pagina = Math.Max(1, pagina);
+            tamano = Math.Clamp(tamano, 1, 100);
+
             var query = _context.Addons
                 .Include(a => a.Killer)
                 .Where(a => a.Activo == true);
@@ -92,9 +95,10 @@ namespace DBDHub.Controllers
         // POST: Addons/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Rareza,Descripcion,KillerId,Activo,ImagenUrl")] Addon addon)
+        public async Task<IActionResult> Edit(int id, [Bind("Nombre,Rareza,Descripcion,KillerId,Activo,ImagenUrl")] Addon addon)
         {
-            if (id != addon.Id) return NotFound();
+            addon.Id = id;
+
             if (ModelState.IsValid)
             {
                 try
